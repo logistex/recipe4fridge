@@ -89,7 +89,9 @@ if uploaded_file is not None:
                 st.code(content)
                 st.session_state.ingredients = []
             else:
-                st.session_state.ingredients = ingredients
+                st.session_state.ingredients = [
+                    {"name": name, "quantity": "1"} for name in ingredients
+                ]
 
 if "ingredients" in st.session_state:
     st.subheader("인식된 식재료 목록")
@@ -99,19 +101,32 @@ if "ingredients" in st.session_state:
 
     delete_index = None
     for i, item in enumerate(st.session_state.ingredients):
-        col1, col2 = st.columns([5, 1])
-        col1.write(f"- {item}")
-        if col2.button("삭제", key=f"delete_{i}"):
+        col_name, col_qty, col_delete = st.columns([3, 1, 1])
+        item["name"] = col_name.text_input(
+            "이름", value=item["name"], key=f"ingredient_name_{i}", label_visibility="collapsed"
+        )
+        item["quantity"] = col_qty.text_input(
+            "수량", value=item["quantity"], key=f"ingredient_qty_{i}", label_visibility="collapsed"
+        )
+        if col_delete.button("삭제", key=f"delete_{i}"):
             delete_index = i
     if delete_index is not None:
         st.session_state.ingredients.pop(delete_index)
         st.rerun()
 
     with st.form("add_ingredient_form", clear_on_submit=True):
-        new_item = st.text_input("재료 직접 추가")
-        submitted = st.form_submit_button("추가")
-        if submitted and new_item.strip():
-            st.session_state.ingredients.append(new_item.strip())
+        col_name, col_qty, col_add = st.columns([3, 1, 1])
+        new_name = col_name.text_input(
+            "재료 이름", label_visibility="collapsed", placeholder="재료 이름"
+        )
+        new_qty = col_qty.text_input(
+            "수량", label_visibility="collapsed", placeholder="수량", value="1"
+        )
+        submitted = col_add.form_submit_button("추가")
+        if submitted and new_name.strip():
+            st.session_state.ingredients.append(
+                {"name": new_name.strip(), "quantity": new_qty.strip() or "1"}
+            )
             st.rerun()
 
     st.divider()
