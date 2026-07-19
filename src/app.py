@@ -76,7 +76,13 @@ if uploaded_file is not None:
             st.error(f"요청이 실패했습니다 (status {response.status_code}).")
             st.code(response.text)
         else:
-            content = response.json()["choices"][0]["message"]["content"]
+            body = response.json()
+            choices = body.get("choices")
+            if not choices:
+                st.error("모델 응답 형식이 올바르지 않습니다 (choices 없음). 잠시 후 다시 시도해주세요.")
+                st.code(response.text)
+                st.stop()
+            content = choices[0]["message"]["content"]
             ingredients = parse_ingredients(content)
             if ingredients is None:
                 st.warning("모델 응답을 목록으로 변환하지 못했습니다. 아래 원문을 참고해 직접 목록을 추가해주세요.")
