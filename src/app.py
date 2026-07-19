@@ -1,9 +1,11 @@
 import os
+import time
 
 import requests
 import streamlit as st
 from dotenv import load_dotenv
 
+from recipe import RECIPE_MODEL, generate_recipes, parse_recipes
 from vision import (
     MAX_IMAGE_DIMENSION,
     VISION_MODEL,
@@ -15,6 +17,7 @@ from vision import (
 load_dotenv()
 
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+RECIPE_REQUEST_COOLDOWN_SECONDS = 5
 
 
 def get_api_key():
@@ -131,6 +134,97 @@ if "ingredients" in st.session_state:
 
     st.divider()
     if st.button("레시피 추천받기 →", disabled=not st.session_state.ingredients):
-        st.session_state.confirmed_ingredients = {"ingredients": st.session_state.ingredients}
-        st.success("식재료 목록이 확정되었습니다. (2단계 레시피 생성은 다음 작업에서 이어집니다)")
-        st.json(st.session_state.confirmed_ingredients)
+        st.session_state.confirmed_ingredients = {
+            "ingredients": [item["name"] for item in st.session_state.ingredients]
+        }
+        st.session_state.pop("recipes", None)
+        st.session_state.pop("selected_recipe", None)
+
+if st.session_state.get("confirmed_ingredients"):
+    st.divider()
+    st.subheader("🍳 레시피 추천 (2단계)")
+    st.caption(f"텍스트 모델: `{RECIPE_MODEL}`")
+
+    ingredient_names = st.session_state.confirmed_ingredients["ingredients"]
+    st.write("사용 가능한 재료: " + ", ".join(ingredient_names))
+
+    now = time.time()
+    last_request = st.session_state.get("last_recipe_request_time", 0)
+    elapsed = now - last_request
+    can_request = elapsed >= RECIPE_REQUEST_COOLDOWN_SECONDS
+
+    button_label = "다시 추천받기" if "recipes" in st.session_state else "레시피 생성하기"
+    if not can_request:
+        st.caption(f"{RECIPE_REQUEST_COOLDOWN_SECONDS - elapsed:.0f}초 후 다시 시도할 수 있습니다.")
+
+    if st.button(button_label, type="primary", disabled=not can_request):
+        st.session_state.last_recipe_request_time = time.time()
+        with st.status("레시피를 생성하는 중입니다...", expanded=True) as status:
+            try:
+                response = generate_recipes(
+                    ingredient_names,
+                    api_key,
+                    on_attempt=lambda label, model: status.write(f"{label}: `{model}` 호출 중..."),
+                )
+            except requests.exceptions.Timeout:
+                st.error("요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요.")
+                st.stop()
+            except requests.exceptions.RequestException as e:
+                st.error(f"네트워크 오류가 발생했습니다: {e}")
+                st.stop()
+            status.update(label="생성 완료", state="complete")
+
+        if response.status_code == 429:
+            st.error("무료 모델 요청이 일시적으로 몰려 제한되었습니다 (429). 잠시 후 다시 시도해주세요.")
+        elif response.status_code >= 500:
+            st.error("모델 제공자 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+        elif response.status_code != 200:
+            st.error(f"요청이 실패했습니다 (status {response.status_code}).")
+            st.code(response.text)
+        else:
+            body = response.json()
+            choices = body.get("choices")
+            if not choices:
+                st.error("모델 응답 형식이 올바르지 않습니다 (choices 없음). 잠시 후 다시 시도해주세요.")
+                st.code(response.text)
+            else:
+                content = choices[0]["message"]["content"]
+                recipes = parse_recipes(content)
+                if not recipes:
+                    st.warning("모델 응답을 레시피로 변환하지 못했습니다. 아래 원문을 확인해주세요.")
+                    st.code(content)
+                else:
+                    st.session_state.recipes = recipes
+                    st.session_state.selected_recipe = 0
+        st.rerun()
+
+    if st.session_state.get("recipes"):
+        st.caption("💡 매 요청마다 다른 레시피가 나올 수 있어요. 마음에 안 들면 다시 추천받아보세요.")
+        cols = st.columns(len(st.session_state.recipes))
+        for idx, (col, r) in enumerate(zip(cols, st.session_state.recipes)):
+            with col:
+                st.markdown(f"**{r.get('name', '이름 없음')}**")
+                st.write(f"⏱ 약 {r.get('cook_time_minutes', '?')}분")
+                missing = r.get("missing_ingredients") or []
+                if missing:
+                    st.warning("부족: " + ", ".join(missing))
+                else:
+                    st.success("모든 재료 보유!")
+                if st.button("자세히 보기", key=f"select_recipe_{idx}"):
+                    st.session_state.selected_recipe = idx
+
+        selected_idx = st.session_state.get("selected_recipe")
+        if selected_idx is not None and 0 <= selected_idx < len(st.session_state.recipes):
+            recipe = st.session_state.recipes[selected_idx]
+            st.divider()
+            st.markdown(f"### 📖 {recipe.get('name', '이름 없음')}")
+            st.write("**사용 재료**: " + ", ".join(recipe.get("used_ingredients") or []))
+            missing = recipe.get("missing_ingredients") or []
+            if missing:
+                st.write("**추가로 필요한 재료**: " + ", ".join(missing))
+            st.write("**조리 순서**")
+            for step_idx, step in enumerate(recipe.get("steps") or [], start=1):
+                st.write(f"{step_idx}. {step}")
+
+            if st.button("레시피 저장", key="save_recipe"):
+                st.info("레시피 저장 기능은 3단계에서 구현됩니다.")
