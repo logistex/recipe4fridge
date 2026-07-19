@@ -29,3 +29,9 @@ python3 src/test_api.py
 - `.env`의 `OPENROUTER_API_KEY`는 OpenRouter API 접근에 사용됩니다. 이 값을 출력하거나 로그로 남기거나 커밋하지 마세요.
 - `.env`는 `.gitignore`에 등록되어 있어 커밋되지 않습니다. 실제 키가 없는 템플릿은 `.env.example`을 참고하세요.
 - 코드에서는 항상 환경 변수(`process.env.OPENROUTER_API_KEY`, `os.environ["OPENROUTER_API_KEY"]` 등)로 키를 불러오고, 소스 코드에 직접 하드코딩하지 마세요.
+
+## 실행 시 확인 사항
+
+OpenRouter API를 이용해서 실제 AI 모델이 냉장고 사진 이미지를 인식하고 레시피를 생성하게 해줘.
+매번 실행할 때마다 API가 정확하게 작동했는지, AI 모델이 문제 없이 실행되었는지를 파악하고,
+문제가 있다면 어떤 문제가 있었는지를 보고해. 
