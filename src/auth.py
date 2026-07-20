@@ -42,7 +42,8 @@ def login(email, password):
     """
     email = email.strip().lower()
     user = db.get_user_by_email(email)
-    if not user or not verify_password(password, user["password_hash"]):
+    # user["password_hash"]가 없으면 Google 등 소셜 로그인 전용 계정이다.
+    if not user or not user["password_hash"] or not verify_password(password, user["password_hash"]):
         return False, GENERIC_LOGIN_ERROR
 
     return True, {"id": user["id"], "email": user["email"], "nickname": user["nickname"]}

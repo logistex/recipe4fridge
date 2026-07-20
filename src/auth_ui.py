@@ -29,20 +29,55 @@ def current_user():
     return st.session_state.get("current_user")
 
 
+def _sync_google_login():
+    """Google 로그인 리다이렉트 후 돌아왔을 때, st.user 정보를 우리 DB/세션과 연결한다."""
+    if current_user() is not None:
+        return
+    if not getattr(st.user, "is_logged_in", False):
+        return
+
+    info = st.user.to_dict()
+    email = info.get("email")
+    if not email:
+        return
+    nickname = info.get("name") or email.split("@")[0]
+    google_user = db.get_or_create_google_user(email, nickname)
+    st.session_state.current_user = {
+        "id": google_user["id"],
+        "email": google_user["email"],
+        "nickname": google_user["nickname"],
+        "via_google": True,
+    }
+
+
 def render_sidebar_auth():
     """사이드바에 로그인 상태/로그인·회원가입 폼을 그린다. 모든 페이지에서 공통으로 호출한다."""
+    _sync_google_login()
     with st.sidebar:
         user = current_user()
         if user:
             st.markdown(f"👋 **{user['nickname']}**님")
             st.caption(user["email"])
             if st.button("로그아웃", key="logout_button"):
-                st.session_state.pop("current_user", None)
-                for key in APP_FLOW_STATE_KEYS:
-                    st.session_state.pop(key, None)
-                st.rerun()
+                if user.get("via_google"):
+                    # st.logout()이 자체적으로 세션을 새로 시작시키므로 별도 rerun/정리가 불필요하다.
+                    st.logout()
+                else:
+                    st.session_state.pop("current_user", None)
+                    for key in APP_FLOW_STATE_KEYS:
+                        st.session_state.pop(key, None)
+                    st.rerun()
         else:
             st.subheader("로그인 / 회원가입")
+
+            if st.button("Google로 로그인", key="google_login_button"):
+                try:
+                    st.login()
+                except Exception as e:
+                    st.error(f"Google 로그인을 사용할 수 없습니다: {e}")
+
+            st.divider()
+
             tab_login, tab_signup = st.tabs(["로그인", "회원가입"])
 
             with tab_login:

@@ -1,6 +1,7 @@
 .env
 .env.*
 !.env.example
+.streamlit/secrets.toml
 .DS_Store
 __pycache__/
 *.pyc

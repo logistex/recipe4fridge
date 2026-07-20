@@ -40,12 +40,15 @@ def init_db():
                 CREATE TABLE IF NOT EXISTS users (
                     id TEXT PRIMARY KEY,
                     email TEXT UNIQUE NOT NULL,
-                    password_hash TEXT NOT NULL,
+                    password_hash TEXT,
                     nickname TEXT NOT NULL,
                     created_at TEXT NOT NULL
                 )
                 """
             )
+            # Google 로그인 사용자는 비밀번호가 없으므로, 기존에 NOT NULL로 만들어진
+            # 테이블이 있다면 nullable로 완화한다 (이미 nullable이면 no-op).
+            cur.execute("ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL")
             cur.execute(
                 """
                 CREATE TABLE IF NOT EXISTS saved_recipes (
@@ -98,6 +101,15 @@ def get_user_by_id(user_id):
             cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
             row = cur.fetchone()
             return dict(row) if row else None
+
+
+def get_or_create_google_user(email, nickname):
+    """Google 로그인 사용자를 이메일로 조회하고, 처음 로그인이면 비밀번호 없이 새로 만든다."""
+    user = get_user_by_email(email)
+    if user:
+        return user
+    user_id = create_user(email, None, nickname)
+    return get_user_by_id(user_id)
 
 
 def update_nickname(user_id, nickname):
