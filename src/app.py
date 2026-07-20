@@ -7,9 +7,18 @@ from dotenv import load_dotenv
 
 import db
 from auth_ui import current_user, render_sidebar_auth
-from recipe import RECIPE_MODEL, generate_recipes, parse_recipes
+from recipe import (
+    CUISINE_OPTIONS,
+    DIFFICULTY_OPTIONS,
+    RECIPE_MODEL,
+    SERVINGS_OPTIONS,
+    TIME_OPTIONS,
+    generate_recipes,
+    parse_recipes,
+)
 from vision import (
     MAX_IMAGE_DIMENSION,
+    UNIT_OPTIONS,
     VISION_MODEL,
     parse_ingredients,
     recognize_ingredients,
@@ -35,12 +44,41 @@ def get_api_key():
 st.set_page_config(page_title="냉장고 식재료 인식", page_icon="🥬")
 render_sidebar_auth()
 
+# '자세히 보기' 버튼이 카드마다 다른 높이에 걸리지 않도록, 카드 안 마지막 요소(버튼)를 바닥에 붙인다.
+st.markdown(
+    """
+    <style>
+    div[data-testid="column"] > div[data-testid="stVerticalBlockBorderWrapper"] > div {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    div[data-testid="column"] > div[data-testid="stVerticalBlockBorderWrapper"] > div > div:last-child {
+        margin-top: auto;
+    }
+    .ingredient-chip {
+        display: inline-block;
+        background: #e8e8e8;
+        color: #333;
+        border-radius: 14px;
+        padding: 4px 12px;
+        margin: 2px 4px 2px 0;
+        font-size: 0.9em;
+        white-space: nowrap;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 st.title("🥬 냉장고 식재료 인식 (1단계)")
 st.caption(f"비전 모델: `{VISION_MODEL}`")
 
 api_key = get_api_key()
 
-uploaded_file = st.file_uploader("냉장고 사진을 업로드하세요", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader(
+    "냉장고 사진을 업로드하거나, 이 영역으로 파일을 끌어다 놓으세요", type=["jpg", "jpeg", "png"]
+)
 
 if uploaded_file is not None:
     if uploaded_file.size > MAX_UPLOAD_BYTES:
@@ -79,7 +117,7 @@ if uploaded_file is not None:
         if response.status_code == 429:
             st.session_state.recognition_error = (
                 "❌ 식재료 인식 실패: 무료 비전 모델 요청이 계속 몰려 제한되었습니다 (429). "
-                "기본 모델과 폴백 모델 모두 실패했습니다. 잠시 후 다시 시도해주세요."
+                "기본 모델(3차 시도)과 폴백 모델 모두 실패했습니다. 잠시 후 다시 시도해주세요."
             )
         elif response.status_code >= 500:
             st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 제공자 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
@@ -99,9 +137,7 @@ if uploaded_file is not None:
                     st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 응답을 재료 목록으로 변환하지 못했습니다."
                     st.session_state.recognition_error_detail = content
                 else:
-                    st.session_state.ingredients = [
-                        {"name": name, "quantity": "1"} for name in ingredients
-                    ]
+                    st.session_state.ingredients = ingredients
         st.rerun()
 
 if st.session_state.get("used_vision_model"):
@@ -119,18 +155,24 @@ if st.session_state.get("recognition_error"):
 
 if "ingredients" in st.session_state:
     st.subheader("인식된 식재료 목록")
+    st.caption("⚠️ AI 인식 결과는 부정확할 수 있습니다. 이름/수량/단위를 확인하고 필요하면 직접 수정해주세요.")
 
     if not st.session_state.ingredients:
         st.info("아직 목록이 비어 있습니다. 아래에서 직접 추가해주세요.")
 
     delete_index = None
     for i, item in enumerate(st.session_state.ingredients):
-        col_name, col_qty, col_delete = st.columns([3, 1, 1])
+        item.setdefault("unit", "개")
+        col_name, col_qty, col_unit, col_delete = st.columns([3, 1, 1, 1])
         item["name"] = col_name.text_input(
             "이름", value=item["name"], key=f"ingredient_name_{i}", label_visibility="collapsed"
         )
         item["quantity"] = col_qty.text_input(
             "수량", value=item["quantity"], key=f"ingredient_qty_{i}", label_visibility="collapsed"
+        )
+        unit_index = UNIT_OPTIONS.index(item["unit"]) if item["unit"] in UNIT_OPTIONS else 0
+        item["unit"] = col_unit.selectbox(
+            "단위", UNIT_OPTIONS, index=unit_index, key=f"ingredient_unit_{i}", label_visibility="collapsed"
         )
         if col_delete.button("삭제", key=f"delete_{i}"):
             delete_index = i
@@ -139,17 +181,18 @@ if "ingredients" in st.session_state:
         st.rerun()
 
     with st.form("add_ingredient_form", clear_on_submit=True):
-        col_name, col_qty, col_add = st.columns([3, 1, 1])
+        col_name, col_qty, col_unit, col_add = st.columns([3, 1, 1, 1])
         new_name = col_name.text_input(
             "재료 이름", label_visibility="collapsed", placeholder="재료 이름"
         )
         new_qty = col_qty.text_input(
             "수량", label_visibility="collapsed", placeholder="수량", value="1"
         )
+        new_unit = col_unit.selectbox("단위", UNIT_OPTIONS, label_visibility="collapsed")
         submitted = col_add.form_submit_button("추가")
         if submitted and new_name.strip():
             st.session_state.ingredients.append(
-                {"name": new_name.strip(), "quantity": new_qty.strip() or "1"}
+                {"name": new_name.strip(), "quantity": new_qty.strip() or "1", "unit": new_unit}
             )
             st.rerun()
 
@@ -160,14 +203,35 @@ if "ingredients" in st.session_state:
         }
         st.session_state.pop("recipes", None)
         st.session_state.pop("selected_recipe", None)
+        st.session_state.auto_generate_recipes = True
 
 if st.session_state.get("confirmed_ingredients"):
     st.divider()
-    st.subheader("🍳 레시피 추천 (2단계)")
+    header_col, back_col = st.columns([4, 1])
+    header_col.subheader("🍳 레시피 추천 (2단계)")
+    if back_col.button("← 1단계로"):
+        st.session_state.pop("confirmed_ingredients", None)
+        st.session_state.pop("recipes", None)
+        st.session_state.pop("selected_recipe", None)
+        st.session_state.pop("auto_generate_recipes", None)
+        st.rerun()
     st.caption(f"텍스트 모델: `{RECIPE_MODEL}`")
 
     ingredient_names = st.session_state.confirmed_ingredients["ingredients"]
-    st.write("사용 가능한 재료: " + ", ".join(ingredient_names))
+    chips_html = "".join(f'<span class="ingredient-chip">{name}</span>' for name in ingredient_names)
+    st.markdown(chips_html, unsafe_allow_html=True)
+
+    opt_cols = st.columns(4)
+    cuisine = opt_cols[0].selectbox("요리 종류", CUISINE_OPTIONS, key="recipe_cuisine")
+    difficulty = opt_cols[1].selectbox("난이도", DIFFICULTY_OPTIONS, key="recipe_difficulty")
+    time_pref = opt_cols[2].selectbox("조리 시간", TIME_OPTIONS, key="recipe_time")
+    servings = opt_cols[3].selectbox("인원", SERVINGS_OPTIONS, key="recipe_servings")
+    recipe_options = {
+        "cuisine": cuisine,
+        "difficulty": difficulty,
+        "time_pref": time_pref,
+        "servings": servings,
+    }
 
     now = time.time()
     last_request = st.session_state.get("last_recipe_request_time", 0)
@@ -178,14 +242,18 @@ if st.session_state.get("confirmed_ingredients"):
     if not can_request:
         st.caption(f"{RECIPE_REQUEST_COOLDOWN_SECONDS - elapsed:.0f}초 후 다시 시도할 수 있습니다.")
 
-    if st.button(button_label, type="primary", disabled=not can_request):
+    manual_click = st.button(button_label, type="primary", disabled=not can_request)
+    auto_trigger = st.session_state.pop("auto_generate_recipes", False) and can_request
+
+    if manual_click or auto_trigger:
         st.session_state.last_recipe_request_time = time.time()
         with st.status("레시피를 생성하는 중입니다...", expanded=True) as status:
             try:
-                response = generate_recipes(
+                response, used_recipe_model = generate_recipes(
                     ingredient_names,
                     api_key,
                     on_attempt=lambda label, model: status.write(f"{label}: `{model}` 호출 중..."),
+                    **recipe_options,
                 )
             except requests.exceptions.Timeout:
                 st.session_state.pop("recipes", None)
@@ -199,10 +267,15 @@ if st.session_state.get("confirmed_ingredients"):
                 st.stop()
             status.update(label="생성 완료", state="complete")
 
+        st.caption(f"실제 응답 모델: `{used_recipe_model}`")
+
         if response.status_code == 429:
             st.session_state.pop("recipes", None)
             st.session_state.pop("selected_recipe", None)
-            st.error("❌ 레시피 생성 실패: 무료 모델 요청이 일시적으로 몰려 제한되었습니다 (429). 잠시 후 다시 시도해주세요.")
+            st.error(
+                "❌ 레시피 생성 실패: 무료 모델 요청이 계속 몰려 제한되었습니다 (429). "
+                "기본 모델(3차 시도)과 폴백 모델 모두 실패했습니다. 잠시 후 다시 시도해주세요."
+            )
         elif response.status_code >= 500:
             st.session_state.pop("recipes", None)
             st.session_state.pop("selected_recipe", None)
@@ -237,25 +310,33 @@ if st.session_state.get("confirmed_ingredients"):
         cols = st.columns(len(st.session_state.recipes))
         for idx, (col, r) in enumerate(zip(cols, st.session_state.recipes)):
             with col:
-                st.markdown(f"**{r.get('name', '이름 없음')}**")
-                st.write(f"⏱ 약 {r.get('cook_time_minutes', '?')}분")
-                missing = r.get("missing_ingredients") or []
-                if missing:
-                    st.warning("부족: " + ", ".join(missing))
-                else:
-                    st.success("모든 재료 보유!")
-                if st.button("자세히 보기", key=f"select_recipe_{idx}"):
-                    st.session_state.selected_recipe = idx
+                with st.container(border=True, height=260):
+                    st.markdown(f"**{r.get('name', '이름 없음')}**")
+                    st.write(f"⏱ 약 {r.get('cook_time_minutes', '?')}분")
+                    missing = r.get("missing_ingredients") or []
+                    if missing:
+                        st.warning("부족: " + ", ".join(missing))
+                    else:
+                        st.success("모든 재료 보유!")
+                    if st.button("자세히 보기", key=f"select_recipe_{idx}"):
+                        st.session_state.selected_recipe = idx
 
         selected_idx = st.session_state.get("selected_recipe")
         if selected_idx is not None and 0 <= selected_idx < len(st.session_state.recipes):
             recipe = st.session_state.recipes[selected_idx]
             st.divider()
-            st.markdown(f"### 📖 {recipe.get('name', '이름 없음')}")
+            detail_header_col, detail_back_col = st.columns([4, 1])
+            detail_header_col.markdown(f"### 📖 {recipe.get('name', '이름 없음')}")
+            if detail_back_col.button("← 목록으로"):
+                st.session_state.pop("selected_recipe", None)
+                st.rerun()
+
             st.write("**사용 재료**: " + ", ".join(recipe.get("used_ingredients") or []))
             missing = recipe.get("missing_ingredients") or []
             if missing:
-                st.write("**추가로 필요한 재료**: " + ", ".join(missing))
+                st.warning("**부족한 재료**: " + ", ".join(missing))
+            else:
+                st.success("모든 재료를 보유하고 있습니다!")
             st.write("**조리 순서**")
             for step_idx, step in enumerate(recipe.get("steps") or [], start=1):
                 st.write(f"{step_idx}. {step}")

@@ -5,6 +5,24 @@ import db
 
 db.init_db()
 
+# app.py의 1~2단계 진행 상태 키. 로그아웃 시 이전 화면(재료 목록/레시피 등)이
+# 남아있지 않도록 함께 지운다. app.py에서 새 session_state 키를 추가하면 여기도 갱신해야 한다.
+APP_FLOW_STATE_KEYS = [
+    "ingredients",
+    "recognition_error",
+    "recognition_error_detail",
+    "used_vision_model",
+    "confirmed_ingredients",
+    "recipes",
+    "selected_recipe",
+    "last_recipe_request_time",
+    "auto_generate_recipes",
+    "recipe_cuisine",
+    "recipe_difficulty",
+    "recipe_time",
+    "recipe_servings",
+]
+
 
 def current_user():
     return st.session_state.get("current_user")
@@ -19,6 +37,8 @@ def render_sidebar_auth():
             st.caption(user["email"])
             if st.button("로그아웃", key="logout_button"):
                 st.session_state.pop("current_user", None)
+                for key in APP_FLOW_STATE_KEYS:
+                    st.session_state.pop(key, None)
                 st.rerun()
         else:
             st.subheader("로그인 / 회원가입")
