@@ -1,6 +1,7 @@
 import base64
 import io
 import json
+import random
 import re
 import time
 
@@ -8,10 +9,7 @@ import requests
 from PIL import Image
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
-VISION_MODEL = "google/gemma-4-31b-it:free"
-# 기본 모델이 429(일시적 요청 제한)로 실패할 경우 시도할, 다른 제공사의 인기가 낮은 무료 비전 모델.
-# 같은 제공사(Google AI Studio)의 혼잡을 그대로 물려받지 않도록 다른 제공사 모델을 선택했다.
-FALLBACK_VISION_MODEL = "nvidia/nemotron-nano-12b-v2-vl:free"
+MODELS_URL = "https://openrouter.ai/api/v1/models"
 MAX_IMAGE_DIMENSION = 1024
 UNIT_OPTIONS = ["개", "병", "봉지", "팩", "단", "g", "kg", "ml", "L", "기타"]
 RECOGNITION_PROMPT = (
@@ -20,6 +18,39 @@ RECOGNITION_PROMPT = (
     '사진만으로 정확한 수량을 알기 어려우면 quantity는 1, unit은 "개"로 추정해줘.\n'
     '예: [{"name": "계란", "quantity": 6, "unit": "개"}, {"name": "우유", "quantity": 1, "unit": "개"}]'
 )
+
+# 오픈라우터 무료 모델 목록 조회 자체가 실패할 경우를 위한 최소 안전망 (과거에 정상 동작 확인된 모델).
+SAFETY_NET_VISION_MODELS = [
+    "google/gemma-4-31b-it:free",
+    "nvidia/nemotron-nano-12b-v2-vl:free",
+]
+_EXCLUDE_KEYWORDS = ["safety", "rerank", "guard"]
+
+
+def list_free_vision_models():
+    """오픈라우터에서 현재 사용 가능한 무료 비전(이미지 입력) 모델 목록을 실시간으로 조회한다.
+
+    무료 모델 라인업은 시간에 따라 계속 바뀌므로 매번 새로 조회한다.
+    조회 자체가 실패하면 최소한의 고정 안전망 목록을 반환한다.
+    """
+    try:
+        response = requests.get(MODELS_URL, timeout=10)
+        response.raise_for_status()
+        data = response.json().get("data", [])
+    except (requests.exceptions.RequestException, ValueError):
+        return list(SAFETY_NET_VISION_MODELS)
+
+    models = []
+    for m in data:
+        model_id = m.get("id", "")
+        if not model_id.endswith(":free"):
+            continue
+        if any(keyword in model_id.lower() for keyword in _EXCLUDE_KEYWORDS):
+            continue
+        modality = m.get("architecture", {}).get("input_modalities", [])
+        if "image" in modality:
+            models.append(model_id)
+    return models or list(SAFETY_NET_VISION_MODELS)
 
 
 def to_resized_data_uri(file_like):
@@ -53,28 +84,39 @@ def call_vision_model(model, data_uri, api_key):
     )
 
 
-def recognize_ingredients(data_uri, api_key, on_attempt=None):
-    """429가 나면 같은 모델로 최대 3차 시도까지 재시도하고, 그래도 안 되면 폴백 모델로 전환한다.
+def recognize_ingredients(data_uri, api_key, on_attempt=None, attempts=3):
+    """매 시도마다 오픈라우터의 현재 무료 비전 모델 중 서로 다른 모델을 무작위로 골라 시도한다.
+
+    429(요청 폭주)든 JSON 파싱 실패든 실패로 간주하고, 성공(재료 목록을 얻을 때)할 때까지
+    또는 attempts 횟수만큼 매번 다른 모델로 재시도한다. 고정된 "폴백 모델" 개념 대신,
+    매 시도 자체가 서로 다른 모델이라 폴백 역할을 겸한다.
 
     on_attempt: 선택적 콜백. (label, model) 을 인자로 호출되어 진행 상황을 UI에 전달할 수 있다.
     """
-    plan = [
-        (VISION_MODEL, "1차 시도"),
-        (VISION_MODEL, "2차 시도"),
-        (VISION_MODEL, "3차 시도"),
-        (FALLBACK_VISION_MODEL, "폴백 모델로 전환"),
-    ]
+    pool = list_free_vision_models()
+    random.shuffle(pool)
+    models = pool[:attempts]
+    while len(models) < attempts:
+        models.append(random.choice(SAFETY_NET_VISION_MODELS))
+
     response = None
-    used_model = VISION_MODEL
-    for i, (model, label) in enumerate(plan):
+    used_model = models[0]
+    for i, model in enumerate(models):
+        label = f"{i + 1}차 시도"
         if on_attempt is not None:
             on_attempt(label, model)
         response = call_vision_model(model, data_uri, api_key)
         used_model = model
-        if response.status_code != 429:
-            break
-        if i < len(plan) - 1:
-            time.sleep(2)
+        if response.status_code == 200:
+            try:
+                body = response.json()
+                choices = body.get("choices")
+                if choices and parse_ingredients(choices[0]["message"]["content"]) is not None:
+                    break
+            except ValueError:
+                pass
+        if i < len(models) - 1:
+            time.sleep(1)
     return response, used_model
 
 
