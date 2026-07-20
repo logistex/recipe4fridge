@@ -3,3 +3,4 @@ requests
 python-dotenv
 Pillow
 bcrypt
+psycopg2-binary

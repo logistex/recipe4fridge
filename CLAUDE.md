@@ -27,8 +27,9 @@ python3 src/test_api.py
 ## 환경 변수
 
 - `.env`의 `OPENROUTER_API_KEY`는 OpenRouter API 접근에 사용됩니다. 이 값을 출력하거나 로그로 남기거나 커밋하지 마세요.
+- `.env`의 `DATABASE_URL`은 Supabase(Postgres) 연결 문자열입니다(`src/db.py`). 사용자/저장된 레시피 데이터를 담당하며, 마찬가지로 출력·로그·커밋하지 마세요.
 - `.env`는 `.gitignore`에 등록되어 있어 커밋되지 않습니다. 실제 키가 없는 템플릿은 `.env.example`을 참고하세요.
-- 코드에서는 항상 환경 변수(`process.env.OPENROUTER_API_KEY`, `os.environ["OPENROUTER_API_KEY"]` 등)로 키를 불러오고, 소스 코드에 직접 하드코딩하지 마세요.
+- 코드에서는 항상 환경 변수(`process.env.OPENROUTER_API_KEY`, `os.environ["OPENROUTER_API_KEY"]` 등)로 키를 불러오고, 소스 코드에 직접 하드코딩하지 마세요. 배포 환경(Streamlit Cloud)에서는 `st.secrets`로 동일한 키를 읽습니다(`get_api_key()`/`_database_url()` 패턴 참고).
 
 ## 실행 시 확인 사항
 
