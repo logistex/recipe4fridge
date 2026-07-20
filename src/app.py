@@ -5,6 +5,8 @@ import requests
 import streamlit as st
 from dotenv import load_dotenv
 
+import db
+from auth_ui import current_user, render_sidebar_auth
 from recipe import RECIPE_MODEL, generate_recipes, parse_recipes
 from vision import (
     MAX_IMAGE_DIMENSION,
@@ -31,6 +33,8 @@ def get_api_key():
 
 
 st.set_page_config(page_title="냉장고 식재료 인식", page_icon="🥬")
+render_sidebar_auth()
+
 st.title("🥬 냉장고 식재료 인식 (1단계)")
 st.caption(f"비전 모델: `{VISION_MODEL}`")
 
@@ -257,4 +261,9 @@ if st.session_state.get("confirmed_ingredients"):
                 st.write(f"{step_idx}. {step}")
 
             if st.button("레시피 저장", key="save_recipe"):
-                st.info("레시피 저장 기능은 3단계에서 구현됩니다.")
+                user = current_user()
+                if not user:
+                    st.warning("로그인 후 저장할 수 있습니다. 왼쪽 사이드바에서 로그인/회원가입해주세요.")
+                else:
+                    db.save_recipe(user["id"], recipe)
+                    st.success(f"'{recipe.get('name')}' 레시피를 저장했습니다. 사이드바의 '내 레시피'에서 확인하세요.")
