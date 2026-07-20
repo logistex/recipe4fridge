@@ -254,6 +254,22 @@ elif wizard_step == 3:
     chips_html = "".join(f'<span class="ingredient-chip">{name}</span>' for name in ingredient_names)
     st.markdown(chips_html, unsafe_allow_html=True)
 
+    # 이번 세션에서 처음 3단계에 진입한 경우, 프로필에 저장된 기본 조건을 초깃값으로 채운다.
+    # 이미 값이 있으면(사용자가 수정했거나 이전에 채워졌으면) 건드리지 않는다.
+    if "recipe_cuisine" not in st.session_state:
+        user = current_user()
+        saved = db.get_user_by_id(user["id"]) if user else None
+
+        def _default(saved_value, options):
+            return saved_value if saved_value in options else options[0]
+
+        st.session_state.recipe_cuisine = _default(saved and saved.get("default_cuisine"), CUISINE_OPTIONS)
+        st.session_state.recipe_difficulty = _default(
+            saved and saved.get("default_difficulty"), DIFFICULTY_OPTIONS
+        )
+        st.session_state.recipe_time = _default(saved and saved.get("default_time"), TIME_OPTIONS)
+        st.session_state.recipe_servings = _default(saved and saved.get("default_servings"), SERVINGS_OPTIONS)
+
     opt_cols = st.columns(4)
     cuisine = opt_cols[0].selectbox("요리 종류", CUISINE_OPTIONS, key="recipe_cuisine")
     difficulty = opt_cols[1].selectbox("난이도", DIFFICULTY_OPTIONS, key="recipe_difficulty")

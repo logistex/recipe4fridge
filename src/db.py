@@ -49,6 +49,11 @@ def init_db():
             # Google 로그인 사용자는 비밀번호가 없으므로, 기존에 NOT NULL로 만들어진
             # 테이블이 있다면 nullable로 완화한다 (이미 nullable이면 no-op).
             cur.execute("ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL")
+            # 레시피 추천 기본 조건(프로필에서 설정, 레시피 화면 기본값으로 사용).
+            cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS default_cuisine TEXT")
+            cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS default_difficulty TEXT")
+            cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS default_time TEXT")
+            cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS default_servings TEXT")
             cur.execute(
                 """
                 CREATE TABLE IF NOT EXISTS saved_recipes (
@@ -116,6 +121,19 @@ def update_nickname(user_id, nickname):
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("UPDATE users SET nickname = %s WHERE id = %s", (nickname, user_id))
+
+
+def update_recipe_preferences(user_id, cuisine, difficulty, time_pref, servings):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                UPDATE users
+                SET default_cuisine = %s, default_difficulty = %s, default_time = %s, default_servings = %s
+                WHERE id = %s
+                """,
+                (cuisine, difficulty, time_pref, servings, user_id),
+            )
 
 
 def save_recipe(user_id, recipe):
