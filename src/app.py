@@ -46,6 +46,10 @@ if uploaded_file is not None:
     st.image(uploaded_file, caption="업로드한 사진", use_container_width=True)
 
     if st.button("식재료 인식하기", type="primary"):
+        st.session_state.pop("recognition_error", None)
+        st.session_state.pop("recognition_error_detail", None)
+        st.session_state.pop("ingredients", None)
+
         with st.status("사진을 분석하는 중입니다...", expanded=True) as status:
             data_uri, resized_bytes = to_resized_data_uri(uploaded_file)
             status.write(
@@ -59,42 +63,55 @@ if uploaded_file is not None:
                     on_attempt=lambda label, model: status.write(f"{label}: `{model}` 호출 중..."),
                 )
             except requests.exceptions.Timeout:
-                st.error("요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요.")
-                st.stop()
+                st.session_state.recognition_error = "❌ 식재료 인식 실패: 요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요."
+                st.rerun()
             except requests.exceptions.RequestException as e:
-                st.error(f"네트워크 오류가 발생했습니다: {e}")
-                st.stop()
+                st.session_state.recognition_error = f"❌ 식재료 인식 실패: 네트워크 오류가 발생했습니다: {e}"
+                st.rerun()
             status.update(label="분석 완료", state="complete")
 
-        st.caption(f"실제 응답 모델: `{used_model}`")
+        st.session_state.used_vision_model = used_model
 
         if response.status_code == 429:
-            st.error(
-                "무료 비전 모델 요청이 계속 몰려 제한되었습니다 (429). "
+            st.session_state.recognition_error = (
+                "❌ 식재료 인식 실패: 무료 비전 모델 요청이 계속 몰려 제한되었습니다 (429). "
                 "기본 모델과 폴백 모델 모두 실패했습니다. 잠시 후 다시 시도해주세요."
             )
         elif response.status_code >= 500:
-            st.error("모델 제공자 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+            st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 제공자 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
         elif response.status_code != 200:
-            st.error(f"요청이 실패했습니다 (status {response.status_code}).")
-            st.code(response.text)
+            st.session_state.recognition_error = f"❌ 식재료 인식 실패: 요청이 실패했습니다 (status {response.status_code})."
+            st.session_state.recognition_error_detail = response.text
         else:
             body = response.json()
             choices = body.get("choices")
             if not choices:
-                st.error("모델 응답 형식이 올바르지 않습니다 (choices 없음). 잠시 후 다시 시도해주세요.")
-                st.code(response.text)
-                st.stop()
-            content = choices[0]["message"]["content"]
-            ingredients = parse_ingredients(content)
-            if ingredients is None:
-                st.warning("모델 응답을 목록으로 변환하지 못했습니다. 아래 원문을 참고해 직접 목록을 추가해주세요.")
-                st.code(content)
-                st.session_state.ingredients = []
+                st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 응답 형식이 올바르지 않습니다 (choices 없음). 잠시 후 다시 시도해주세요."
+                st.session_state.recognition_error_detail = response.text
             else:
-                st.session_state.ingredients = [
-                    {"name": name, "quantity": "1"} for name in ingredients
-                ]
+                content = choices[0]["message"]["content"]
+                ingredients = parse_ingredients(content)
+                if ingredients is None:
+                    st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 응답을 재료 목록으로 변환하지 못했습니다."
+                    st.session_state.recognition_error_detail = content
+                else:
+                    st.session_state.ingredients = [
+                        {"name": name, "quantity": "1"} for name in ingredients
+                    ]
+        st.rerun()
+
+if st.session_state.get("used_vision_model"):
+    st.caption(f"실제 응답 모델: `{st.session_state.used_vision_model}`")
+
+if st.session_state.get("recognition_error"):
+    st.error(st.session_state.recognition_error)
+    if st.session_state.get("recognition_error_detail"):
+        st.code(st.session_state.recognition_error_detail)
+    if st.button("재료를 직접 입력할게요"):
+        st.session_state.ingredients = []
+        st.session_state.pop("recognition_error", None)
+        st.session_state.pop("recognition_error_detail", None)
+        st.rerun()
 
 if "ingredients" in st.session_state:
     st.subheader("인식된 식재료 목록")
@@ -167,36 +184,49 @@ if st.session_state.get("confirmed_ingredients"):
                     on_attempt=lambda label, model: status.write(f"{label}: `{model}` 호출 중..."),
                 )
             except requests.exceptions.Timeout:
-                st.error("요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요.")
+                st.session_state.pop("recipes", None)
+                st.session_state.pop("selected_recipe", None)
+                st.error("❌ 레시피 생성 실패: 요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요.")
                 st.stop()
             except requests.exceptions.RequestException as e:
-                st.error(f"네트워크 오류가 발생했습니다: {e}")
+                st.session_state.pop("recipes", None)
+                st.session_state.pop("selected_recipe", None)
+                st.error(f"❌ 레시피 생성 실패: 네트워크 오류가 발생했습니다: {e}")
                 st.stop()
             status.update(label="생성 완료", state="complete")
 
         if response.status_code == 429:
-            st.error("무료 모델 요청이 일시적으로 몰려 제한되었습니다 (429). 잠시 후 다시 시도해주세요.")
+            st.session_state.pop("recipes", None)
+            st.session_state.pop("selected_recipe", None)
+            st.error("❌ 레시피 생성 실패: 무료 모델 요청이 일시적으로 몰려 제한되었습니다 (429). 잠시 후 다시 시도해주세요.")
         elif response.status_code >= 500:
-            st.error("모델 제공자 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+            st.session_state.pop("recipes", None)
+            st.session_state.pop("selected_recipe", None)
+            st.error("❌ 레시피 생성 실패: 모델 제공자 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
         elif response.status_code != 200:
-            st.error(f"요청이 실패했습니다 (status {response.status_code}).")
+            st.session_state.pop("recipes", None)
+            st.session_state.pop("selected_recipe", None)
+            st.error(f"❌ 레시피 생성 실패: 요청이 실패했습니다 (status {response.status_code}).")
             st.code(response.text)
         else:
             body = response.json()
             choices = body.get("choices")
             if not choices:
-                st.error("모델 응답 형식이 올바르지 않습니다 (choices 없음). 잠시 후 다시 시도해주세요.")
+                st.session_state.pop("recipes", None)
+                st.session_state.pop("selected_recipe", None)
+                st.error("❌ 레시피 생성 실패: 모델 응답 형식이 올바르지 않습니다 (choices 없음). 잠시 후 다시 시도해주세요.")
                 st.code(response.text)
             else:
                 content = choices[0]["message"]["content"]
                 recipes = parse_recipes(content)
                 if not recipes:
-                    st.warning("모델 응답을 레시피로 변환하지 못했습니다. 아래 원문을 확인해주세요.")
+                    st.session_state.pop("recipes", None)
+                    st.session_state.pop("selected_recipe", None)
+                    st.error("❌ 레시피 생성 실패: 모델 응답을 레시피로 변환하지 못했습니다. 아래 원문을 확인하고 다시 시도해주세요.")
                     st.code(content)
                 else:
                     st.session_state.recipes = recipes
                     st.session_state.selected_recipe = 0
-        st.rerun()
 
     if st.session_state.get("recipes"):
         st.caption("💡 매 요청마다 다른 레시피가 나올 수 있어요. 마음에 안 들면 다시 추천받아보세요.")
