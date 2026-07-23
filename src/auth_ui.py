@@ -63,6 +63,11 @@ def render_sidebar_auth():
         [data-testid="stBaseButton-primaryFormSubmit"] {
             min-height: 44px;
         }
+        [data-testid="stNumberInputStepUp"],
+        [data-testid="stNumberInputStepDown"] {
+            min-width: 44px;
+            min-height: 44px;
+        }
         </style>
         """,
         unsafe_allow_html=True,
