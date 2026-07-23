@@ -53,6 +53,20 @@ def _sync_google_login():
 def render_sidebar_auth():
     """사이드바에 로그인 상태/로그인·회원가입 폼을 그린다. 모든 페이지에서 공통으로 호출한다."""
     _sync_google_login()
+    # 모바일 터치 타겟 권장 크기(44px) 확보. 모든 페이지에서 공통으로 적용되도록 여기서 주입한다.
+    st.markdown(
+        """
+        <style>
+        [data-testid="stBaseButton-secondary"],
+        [data-testid="stBaseButton-secondaryFormSubmit"],
+        [data-testid="stBaseButton-primary"],
+        [data-testid="stBaseButton-primaryFormSubmit"] {
+            min-height: 44px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
     with st.sidebar:
         user = current_user()
         if user:
