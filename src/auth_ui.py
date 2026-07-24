@@ -8,6 +8,9 @@ db.init_db()
 # app.py의 진행 상태 키. 로그아웃 시 이전 화면(재료 목록/레시피 등)이
 # 남아있지 않도록 함께 지운다. app.py에서 새 session_state 키를 추가하면 여기도 갱신해야 한다.
 APP_FLOW_STATE_KEYS = [
+    "wizard_step",
+    "uploaded_photo_bytes",
+    "uploaded_photo_name",
     "ingredients",
     "recognition_error",
     "recognition_error_detail",

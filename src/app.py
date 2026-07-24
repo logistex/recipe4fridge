@@ -28,9 +28,13 @@ load_dotenv()
 
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 RECIPE_REQUEST_COOLDOWN_SECONDS = 5
+WIZARD_STEP_LABELS = ["① 사진 업로드", "② 식재료 확인", "③ 레시피 추천"]
 
-# "처음부터" 버튼으로 초기화할 진행 상태 키. 새 session_state 키를 추가하면 여기도 갱신해야 한다.
+# "처음부터" 버튼/로그아웃 시 초기화할 진행 상태 키. 새 session_state 키를 추가하면 여기도 갱신해야 한다.
 RESET_STATE_KEYS = [
+    "wizard_step",
+    "uploaded_photo_bytes",
+    "uploaded_photo_name",
     "ingredients",
     "recognition_error",
     "recognition_error_detail",
@@ -55,149 +59,8 @@ def get_api_key():
         st.stop()
 
 
-st.set_page_config(page_title="냉장고 식재료 인식", page_icon="🥬", layout="wide")
-render_sidebar_auth()
-
-# '자세히 보기' 버튼이 카드마다 다른 높이에 걸리지 않도록, 카드 안 마지막 요소(버튼)를 바닥에 붙인다.
-st.markdown(
-    """
-    <style>
-    div[data-testid="column"] > div[data-testid="stVerticalBlockBorderWrapper"] > div {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    div[data-testid="column"] > div[data-testid="stVerticalBlockBorderWrapper"] > div > div:last-child {
-        margin-top: auto;
-    }
-    .ingredient-chip {
-        display: inline-block;
-        background: #e8e8e8;
-        color: #333;
-        border-radius: 14px;
-        padding: 4px 12px;
-        margin: 2px 4px 2px 0;
-        font-size: 0.9em;
-        white-space: nowrap;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-st.session_state.setdefault("uploader_key", 0)
-
-header_col, restart_col = st.columns([5, 1])
-header_col.title("🥬 냉장고 레시피 추천")
-if restart_col.button("🔄 처음부터"):
-    for key in RESET_STATE_KEYS:
-        st.session_state.pop(key, None)
-    st.session_state.uploader_key += 1
-    st.rerun()
-
-api_key = get_api_key()
-
-ingredients_exist = "ingredients" in st.session_state
-recipes_exist = bool(st.session_state.get("recipes"))
-
-# 진행 상황 표시(클릭 불가, 참고용). 화면 전환 없이 아래로 섹션이 이어서 쌓인다.
-progress_cols = st.columns(3)
-progress_cols[0].markdown("✅ ① 사진 업로드" if ingredients_exist else "**① 사진 업로드**")
-if recipes_exist:
-    progress_cols[1].markdown("✅ ② 식재료 확인")
-elif ingredients_exist:
-    progress_cols[1].markdown("**② 식재료 확인**")
-else:
-    progress_cols[1].markdown("② 식재료 확인")
-progress_cols[2].markdown("**③ 레시피 추천**" if ingredients_exist else "③ 레시피 추천")
-st.divider()
-
-# ==================== ① 사진 업로드 ====================
-st.subheader("① 사진 업로드")
-uploaded_file = st.file_uploader(
-    "냉장고 사진을 업로드하거나, 이 영역으로 파일을 끌어다 놓으세요",
-    type=["jpg", "jpeg", "png"],
-    key=f"fridge_photo_{st.session_state.uploader_key}",
-)
-
-if uploaded_file is not None:
-    if uploaded_file.size > MAX_UPLOAD_BYTES:
-        st.error("이미지 용량이 10MB를 초과합니다. 더 작은 이미지를 업로드해주세요.")
-        st.stop()
-
-    st.image(uploaded_file, caption="업로드한 사진", use_container_width=True)
-
-    if st.button("식재료 인식하기", type="primary"):
-        st.session_state.pop("recognition_error", None)
-        st.session_state.pop("recognition_error_detail", None)
-        st.session_state.pop("ingredients", None)
-        st.session_state.pop("recipes", None)
-        st.session_state.pop("selected_recipe", None)
-
-        with st.status("사진을 분석하는 중입니다...", expanded=True) as status:
-            data_uri, resized_bytes = to_resized_data_uri(uploaded_file)
-            status.write(
-                f"이미지 축소: {uploaded_file.size // 1024}KB → {resized_bytes // 1024}KB "
-                f"(긴 변 {MAX_IMAGE_DIMENSION}px 이하)"
-            )
-            try:
-                response, used_model = recognize_ingredients(
-                    data_uri,
-                    api_key,
-                    on_attempt=lambda label, model: status.write(f"{label}: `{model}` 호출 중..."),
-                )
-            except requests.exceptions.Timeout:
-                st.session_state.recognition_error = "❌ 식재료 인식 실패: 요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요."
-                st.rerun()
-            except requests.exceptions.RequestException as e:
-                st.session_state.recognition_error = f"❌ 식재료 인식 실패: 네트워크 오류가 발생했습니다: {e}"
-                st.rerun()
-            status.update(label="분석 완료", state="complete")
-
-        st.session_state.used_vision_model = used_model
-
-        if response.status_code == 429:
-            st.session_state.recognition_error = (
-                "❌ 식재료 인식 실패: 서로 다른 무료 비전 모델로 3차 시도까지 모두 요청이 제한되었습니다 (429). "
-                "잠시 후 다시 시도해주세요."
-            )
-        elif response.status_code >= 500:
-            st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 제공자 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-        elif response.status_code != 200:
-            st.session_state.recognition_error = f"❌ 식재료 인식 실패: 요청이 실패했습니다 (status {response.status_code})."
-            st.session_state.recognition_error_detail = response.text
-        else:
-            body = response.json()
-            choices = body.get("choices")
-            if not choices:
-                st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 응답 형식이 올바르지 않습니다 (choices 없음). 잠시 후 다시 시도해주세요."
-                st.session_state.recognition_error_detail = response.text
-            else:
-                content = choices[0]["message"]["content"]
-                ingredients = parse_ingredients(content)
-                if ingredients is None:
-                    st.session_state.recognition_error = "❌ 식재료 인식 실패: 서로 다른 모델 3차 시도 모두 응답을 재료 목록으로 변환하지 못했습니다."
-                    st.session_state.recognition_error_detail = content
-                else:
-                    st.session_state.ingredients = ingredients
-        st.rerun()
-
-if st.session_state.get("used_vision_model"):
-    st.caption(f"실제 응답 모델: `{st.session_state.used_vision_model}`")
-
-if st.session_state.get("recognition_error"):
-    st.error(st.session_state.recognition_error)
-    if st.session_state.get("recognition_error_detail"):
-        st.code(st.session_state.recognition_error_detail)
-    if st.button("재료를 직접 입력할게요"):
-        st.session_state.ingredients = []
-        st.session_state.pop("recognition_error", None)
-        st.session_state.pop("recognition_error_detail", None)
-        st.rerun()
-
-# ==================== ② 식재료 확인/편집 (인식이 끝나야 표시) ====================
-if ingredients_exist:
-    st.divider()
+def render_ingredient_editor():
+    """② 식재료 확인 섹션. 2단계와 3단계 화면에서 공통으로 사용한다."""
     st.subheader("② 식재료 확인")
     st.caption("⚠️ AI 인식 결과는 부정확할 수 있습니다. 이름/수량/단위를 확인하고 필요하면 직접 수정해주세요.")
 
@@ -261,8 +124,183 @@ if ingredients_exist:
 
     st.session_state.ingredients = merge_duplicate_ingredients(ingredients)
 
-# ==================== ③ 레시피 추천 (인식이 끝나야 표시) ====================
-if ingredients_exist:
+
+st.set_page_config(page_title="냉장고 식재료 인식", page_icon="🥬", layout="wide")
+render_sidebar_auth()
+
+# '자세히 보기' 버튼이 카드마다 다른 높이에 걸리지 않도록, 카드 안 마지막 요소(버튼)를 바닥에 붙인다.
+st.markdown(
+    """
+    <style>
+    div[data-testid="column"] > div[data-testid="stVerticalBlockBorderWrapper"] > div {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    div[data-testid="column"] > div[data-testid="stVerticalBlockBorderWrapper"] > div > div:last-child {
+        margin-top: auto;
+    }
+    .ingredient-chip {
+        display: inline-block;
+        background: #e8e8e8;
+        color: #333;
+        border-radius: 14px;
+        padding: 4px 12px;
+        margin: 2px 4px 2px 0;
+        font-size: 0.9em;
+        white-space: nowrap;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.session_state.setdefault("uploader_key", 0)
+st.session_state.setdefault("wizard_step", 1)
+
+header_col, restart_col = st.columns([5, 1])
+header_col.title("🥬 냉장고 레시피 추천")
+if restart_col.button("🔄 처음부터"):
+    for key in RESET_STATE_KEYS:
+        st.session_state.pop(key, None)
+    st.session_state.uploader_key += 1
+    st.session_state.wizard_step = 1
+    st.rerun()
+
+api_key = get_api_key()
+wizard_step = st.session_state.wizard_step
+
+step_cols = st.columns(3)
+for i, col in enumerate(step_cols, start=1):
+    label = WIZARD_STEP_LABELS[i - 1]
+    if i == wizard_step:
+        col.markdown(f"**:red[{label}]**")
+    elif i < wizard_step:
+        col.markdown(f"✅ {label}")
+    else:
+        col.markdown(label)
+st.divider()
+
+# ==================== 1단계 화면: 사진 업로드만 ====================
+if wizard_step == 1:
+    st.subheader("① 사진 업로드")
+    uploaded_file = st.file_uploader(
+        "냉장고 사진을 업로드하거나, 이 영역으로 파일을 끌어다 놓으세요",
+        type=["jpg", "jpeg", "png"],
+        key=f"fridge_photo_{st.session_state.uploader_key}",
+    )
+
+    if uploaded_file is not None:
+        if uploaded_file.size > MAX_UPLOAD_BYTES:
+            st.error("이미지 용량이 10MB를 초과합니다. 더 작은 이미지를 업로드해주세요.")
+            st.stop()
+
+        st.image(uploaded_file, caption="업로드한 사진", use_container_width=True)
+
+        if st.button("식재료 인식하기", type="primary"):
+            st.session_state.pop("recognition_error", None)
+            st.session_state.pop("recognition_error_detail", None)
+            st.session_state.pop("ingredients", None)
+            st.session_state.pop("recipes", None)
+            st.session_state.pop("selected_recipe", None)
+            st.session_state.uploaded_photo_bytes = uploaded_file.getvalue()
+            st.session_state.uploaded_photo_name = uploaded_file.name
+
+            with st.status("사진을 분석하는 중입니다...", expanded=True) as status:
+                data_uri, resized_bytes = to_resized_data_uri(uploaded_file)
+                status.write(
+                    f"이미지 축소: {uploaded_file.size // 1024}KB → {resized_bytes // 1024}KB "
+                    f"(긴 변 {MAX_IMAGE_DIMENSION}px 이하)"
+                )
+                try:
+                    response, used_model = recognize_ingredients(
+                        data_uri,
+                        api_key,
+                        on_attempt=lambda label, model: status.write(f"{label}: `{model}` 호출 중..."),
+                    )
+                except requests.exceptions.Timeout:
+                    st.session_state.recognition_error = "❌ 식재료 인식 실패: 요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요."
+                    st.rerun()
+                except requests.exceptions.RequestException as e:
+                    st.session_state.recognition_error = f"❌ 식재료 인식 실패: 네트워크 오류가 발생했습니다: {e}"
+                    st.rerun()
+                status.update(label="분석 완료", state="complete")
+
+            st.session_state.used_vision_model = used_model
+
+            if response.status_code == 429:
+                st.session_state.recognition_error = (
+                    "❌ 식재료 인식 실패: 서로 다른 무료 비전 모델로 3차 시도까지 모두 요청이 제한되었습니다 (429). "
+                    "잠시 후 다시 시도해주세요."
+                )
+            elif response.status_code >= 500:
+                st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 제공자 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+            elif response.status_code != 200:
+                st.session_state.recognition_error = f"❌ 식재료 인식 실패: 요청이 실패했습니다 (status {response.status_code})."
+                st.session_state.recognition_error_detail = response.text
+            else:
+                body = response.json()
+                choices = body.get("choices")
+                if not choices:
+                    st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 응답 형식이 올바르지 않습니다 (choices 없음). 잠시 후 다시 시도해주세요."
+                    st.session_state.recognition_error_detail = response.text
+                else:
+                    content = choices[0]["message"]["content"]
+                    ingredients = parse_ingredients(content)
+                    if ingredients is None:
+                        st.session_state.recognition_error = "❌ 식재료 인식 실패: 서로 다른 모델 3차 시도 모두 응답을 재료 목록으로 변환하지 못했습니다."
+                        st.session_state.recognition_error_detail = content
+                    else:
+                        st.session_state.ingredients = ingredients
+                        st.session_state.wizard_step = 2
+            st.rerun()
+
+    if st.session_state.get("used_vision_model"):
+        st.caption(f"실제 응답 모델: `{st.session_state.used_vision_model}`")
+
+    if st.session_state.get("recognition_error"):
+        st.error(st.session_state.recognition_error)
+        if st.session_state.get("recognition_error_detail"):
+            st.code(st.session_state.recognition_error_detail)
+        if st.button("재료를 직접 입력할게요"):
+            st.session_state.ingredients = []
+            st.session_state.pop("recognition_error", None)
+            st.session_state.pop("recognition_error_detail", None)
+            st.session_state.wizard_step = 2
+            st.rerun()
+
+# ==================== 2단계 화면: 업로드한 사진 + 식재료 확인 ====================
+elif wizard_step == 2:
+    st.subheader("① 사진 업로드")
+    if st.session_state.get("uploaded_photo_bytes"):
+        st.image(
+            st.session_state.uploaded_photo_bytes,
+            caption=st.session_state.get("uploaded_photo_name", "업로드한 사진"),
+            use_container_width=True,
+        )
+    if st.session_state.get("used_vision_model"):
+        st.caption(f"실제 응답 모델: `{st.session_state.used_vision_model}`")
+
+    st.divider()
+    render_ingredient_editor()
+
+    st.divider()
+    nav_cols = st.columns(2)
+    if nav_cols[0].button("← 이전 (사진 다시 업로드)"):
+        st.session_state.wizard_step = 1
+        st.rerun()
+    ingredients = st.session_state.get("ingredients", [])
+    if nav_cols[1].button("다음: 레시피 추천 →", type="primary", disabled=not ingredients):
+        st.session_state.wizard_step = 3
+        st.rerun()
+
+# ==================== 3단계 화면: 식재료 확인 + 레시피 추천 ====================
+elif wizard_step == 3:
+    render_ingredient_editor()
+    if st.button("← 이전 (식재료 다시 확인)"):
+        st.session_state.wizard_step = 2
+        st.rerun()
+
     st.divider()
     st.subheader("③ 레시피 추천")
 
