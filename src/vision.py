@@ -120,11 +120,29 @@ def recognize_ingredients(data_uri, api_key, on_attempt=None, attempts=3):
     return response, used_model
 
 
+def merge_duplicate_ingredients(ingredients):
+    """이름이 같은(공백 제거, 대소문자 무시) 재료는 수량을 합쳐 하나로 합친다."""
+    merged = {}
+    order = []
+    for item in ingredients:
+        key = item["name"].strip().lower()
+        if key not in merged:
+            merged[key] = dict(item)
+            order.append(key)
+        else:
+            try:
+                merged[key]["quantity"] = str(int(merged[key]["quantity"]) + int(item["quantity"]))
+            except (TypeError, ValueError):
+                pass
+    return [merged[key] for key in order]
+
+
 def parse_ingredients(content):
     """모델 응답을 [{"name", "quantity", "unit"}, ...] 형태로 파싱한다.
 
     모델이 예전 방식대로 문자열 배열(["계란", "우유"])로 답한 경우도
     수량 1, 단위 "개"로 채워 동일한 형태로 반환한다 (하위 호환).
+    동일한 이름의 재료가 중복 인식된 경우 수량을 합쳐 하나로 정리한다.
     """
     match = re.search(r"\[.*\]", content, re.DOTALL)
     if not match:
@@ -154,4 +172,6 @@ def parse_ingredients(content):
             quantity = 1
             unit = "개"
         ingredients.append({"name": name, "quantity": str(quantity), "unit": unit})
-    return ingredients if ingredients else None
+    if not ingredients:
+        return None
+    return merge_duplicate_ingredients(ingredients)

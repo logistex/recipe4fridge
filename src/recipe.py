@@ -62,6 +62,7 @@ def build_prompt(ingredient_names, cuisine=None, difficulty=None, time_pref=None
     return (
         f"다음 재료로 만들 수 있는 요리 3가지를 추천해줘: {ingredients_text}.\n"
         f"{condition_text}"
+        "요리명, 조리 순서 등 모든 텍스트는 반드시 한국어로만 작성해줘. 영어를 섞지 마.\n"
         "각 레시피는 아래 JSON 형식으로만 답해줘.\n"
         "{\n"
         '  "recipes": [\n'
@@ -92,8 +93,9 @@ def call_recipe_model(model, ingredient_names, api_key, **options):
 def generate_recipes(ingredient_names, api_key, on_attempt=None, attempts=3, **options):
     """매 시도마다 오픈라우터의 현재 무료 텍스트 모델 중 서로 다른 모델을 무작위로 골라 시도한다.
 
-    429든 JSON 파싱 실패든 실패로 간주하고, 성공할 때까지 또는 attempts 횟수만큼
-    매번 다른 모델로 재시도한다 (별도의 고정 폴백 모델 없이, 매 시도 자체가 폴백 역할을 겸함).
+    429든 JSON 파싱 실패든 한국어가 아닌 응답이든 실패로 간주하고, 성공할 때까지 또는
+    attempts 횟수만큼 매번 다른 모델로 재시도한다 (별도의 고정 폴백 모델 없이, 매 시도
+    자체가 폴백 역할을 겸함).
     """
     pool = list_free_text_models()
     random.shuffle(pool)
@@ -113,13 +115,26 @@ def generate_recipes(ingredient_names, api_key, on_attempt=None, attempts=3, **o
             try:
                 body = response.json()
                 choices = body.get("choices")
-                if choices and parse_recipes(choices[0]["message"]["content"]):
-                    break
+                if choices:
+                    recipes = parse_recipes(choices[0]["message"]["content"])
+                    if recipes and _is_korean_enough(recipes):
+                        break
             except ValueError:
                 pass
         if i < len(models) - 1:
             time.sleep(1)
     return response, used_model
+
+
+_HANGUL_RE = re.compile(r"[가-힣]")
+
+
+def _is_korean_enough(recipes):
+    """레시피명/조리 순서에 한글이 전혀 없으면(영어로만 응답한 경우) 실패로 간주한다."""
+    combined = " ".join(
+        (r.get("name") or "") + " " + " ".join(r.get("steps") or []) for r in recipes
+    )
+    return bool(_HANGUL_RE.search(combined))
 
 
 def parse_recipes(content):
