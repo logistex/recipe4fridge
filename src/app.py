@@ -150,6 +150,13 @@ st.markdown(
         font-size: 0.9em;
         white-space: nowrap;
     }
+    /* layout="wide"는 본문 폭이 브라우저 폭(=확대/축소 배율)에 비례해서 늘어난다.
+       업로드 사진은 use_container_width=True라 그 폭을 그대로 따라가므로,
+       화면을 축소(더 넓은 영역이 보임)하면 사진이 오히려 커지는 문제가 있었다.
+       최대 폭을 제한해 과도하게 커지지 않게 한다 (좁은 화면에서는 계속 축소됨). */
+    [data-testid="stImage"] img {
+        max-width: 700px !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
