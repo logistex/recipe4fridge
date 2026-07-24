@@ -4,6 +4,7 @@ import json
 import random
 import re
 import time
+import uuid
 
 import requests
 from PIL import Image
@@ -171,7 +172,7 @@ def parse_ingredients(content):
                 continue
             quantity = 1
             unit = "개"
-        ingredients.append({"name": name, "quantity": str(quantity), "unit": unit})
+        ingredients.append({"_id": uuid.uuid4().hex, "name": name, "quantity": str(quantity), "unit": unit})
     if not ingredients:
         return None
     return merge_duplicate_ingredients(ingredients)

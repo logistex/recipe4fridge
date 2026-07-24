@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 
 import requests
 import streamlit as st
@@ -74,9 +75,14 @@ def render_ingredient_editor():
     delete_index = None
     for i, item in enumerate(ingredients):
         item.setdefault("unit", "개")
+        # 위젯 key는 배열 인덱스가 아니라 재료별 고유 id를 써야 한다. 인덱스를 쓰면
+        # 항목 삭제로 뒤쪽 재료들의 인덱스가 당겨질 때 Streamlit이 그 위젯들의
+        # 이전(다른 재료) 값을 그대로 들고 있어서, 중간 삭제 시 엉뚱한(마지막) 항목이
+        # 사라진 것처럼 보이는 문제가 있었다.
+        item_id = item.setdefault("_id", uuid.uuid4().hex)
         col_name, col_qty, col_unit, col_delete = st.columns([2.5, 2, 1.5, 1.2])
         item["name"] = col_name.text_input(
-            "이름", value=item["name"], key=f"ingredient_name_{i}", label_visibility="collapsed"
+            "이름", value=item["name"], key=f"ingredient_name_{item_id}", label_visibility="collapsed"
         )
         try:
             qty_value = int(item["quantity"])
@@ -88,15 +94,15 @@ def render_ingredient_editor():
                 min_value=0,
                 step=1,
                 value=qty_value,
-                key=f"ingredient_qty_{i}",
+                key=f"ingredient_qty_{item_id}",
                 label_visibility="collapsed",
             )
         )
         unit_index = UNIT_OPTIONS.index(item["unit"]) if item["unit"] in UNIT_OPTIONS else 0
         item["unit"] = col_unit.selectbox(
-            "단위", UNIT_OPTIONS, index=unit_index, key=f"ingredient_unit_{i}", label_visibility="collapsed"
+            "단위", UNIT_OPTIONS, index=unit_index, key=f"ingredient_unit_{item_id}", label_visibility="collapsed"
         )
-        if col_delete.button("삭제", key=f"delete_{i}"):
+        if col_delete.button("삭제", key=f"delete_{item_id}"):
             delete_index = i
     if delete_index is not None:
         ingredients.pop(delete_index)
@@ -119,7 +125,9 @@ def render_ingredient_editor():
                 except (TypeError, ValueError):
                     existing["quantity"] = str(new_qty)
             else:
-                ingredients.append({"name": new_name_clean, "quantity": str(new_qty), "unit": new_unit})
+                ingredients.append(
+                    {"_id": uuid.uuid4().hex, "name": new_name_clean, "quantity": str(new_qty), "unit": new_unit}
+                )
             st.rerun()
 
     st.session_state.ingredients = merge_duplicate_ingredients(ingredients)
