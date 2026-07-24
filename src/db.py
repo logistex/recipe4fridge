@@ -54,6 +54,9 @@ def init_db():
             cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS default_difficulty TEXT")
             cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS default_time TEXT")
             cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS default_servings TEXT")
+            # 사용자가 프로필에서 고른 AI 모델 목록(JSON 배열 문자열). NULL/빈 값이면 전체 무료 모델 사용.
+            cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS selected_vision_models TEXT")
+            cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS selected_text_models TEXT")
             cur.execute(
                 """
                 CREATE TABLE IF NOT EXISTS saved_recipes (
@@ -134,6 +137,34 @@ def update_recipe_preferences(user_id, cuisine, difficulty, time_pref, servings)
                 """,
                 (cuisine, difficulty, time_pref, servings, user_id),
             )
+
+
+def update_model_selection(user_id, vision_model_ids, text_model_ids):
+    """모델 선택을 저장한다. 빈 리스트를 넘기면 NULL로 저장되어 '전체 사용'으로 취급된다."""
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "UPDATE users SET selected_vision_models = %s, selected_text_models = %s WHERE id = %s",
+                (
+                    json.dumps(vision_model_ids, ensure_ascii=False) if vision_model_ids else None,
+                    json.dumps(text_model_ids, ensure_ascii=False) if text_model_ids else None,
+                    user_id,
+                ),
+            )
+
+
+def parse_model_id_list(raw):
+    """users.selected_vision_models/selected_text_models(JSON 문자열)를 리스트로 파싱한다.
+
+    비어있거나 잘못된 값이면 None을 반환한다 (호출부에서 '전체 사용'으로 해석).
+    """
+    if not raw:
+        return None
+    try:
+        parsed = json.loads(raw)
+    except (json.JSONDecodeError, TypeError):
+        return None
+    return parsed if isinstance(parsed, list) and parsed else None
 
 
 def save_recipe(user_id, recipe):

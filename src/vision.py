@@ -28,20 +28,20 @@ SAFETY_NET_VISION_MODELS = [
 _EXCLUDE_KEYWORDS = ["safety", "rerank", "guard"]
 
 
-def list_free_vision_models():
-    """오픈라우터에서 현재 사용 가능한 무료 비전(이미지 입력) 모델 목록을 실시간으로 조회한다.
+def _fetch_free_vision_model_entries():
+    """오픈라우터에서 현재 사용 가능한 무료 비전(이미지 입력) 모델의 원본 정보를 조회한다.
 
     무료 모델 라인업은 시간에 따라 계속 바뀌므로 매번 새로 조회한다.
-    조회 자체가 실패하면 최소한의 고정 안전망 목록을 반환한다.
+    조회 자체가 실패하면 빈 리스트를 반환한다 (호출부에서 안전망으로 대체).
     """
     try:
         response = requests.get(MODELS_URL, timeout=10)
         response.raise_for_status()
         data = response.json().get("data", [])
     except (requests.exceptions.RequestException, ValueError):
-        return list(SAFETY_NET_VISION_MODELS)
+        return []
 
-    models = []
+    entries = []
     for m in data:
         model_id = m.get("id", "")
         if not model_id.endswith(":free"):
@@ -50,8 +50,37 @@ def list_free_vision_models():
             continue
         modality = m.get("architecture", {}).get("input_modalities", [])
         if "image" in modality:
-            models.append(model_id)
-    return models or list(SAFETY_NET_VISION_MODELS)
+            entries.append(m)
+    return entries
+
+
+def list_free_vision_models(allowed_models=None):
+    """현재 사용 가능한 무료 비전 모델 id 목록. allowed_models가 주어지면 그 안에서만 고른다.
+
+    allowed_models로 걸러낸 결과가 비어있으면(예: 사용자가 골라둔 모델이 전부 목록에서
+    사라진 경우) 안전하게 전체 목록으로 되돌아간다.
+    """
+    entries = _fetch_free_vision_model_entries()
+    models = [m.get("id", "") for m in entries] or list(SAFETY_NET_VISION_MODELS)
+    if allowed_models:
+        filtered = [m for m in models if m in allowed_models]
+        if filtered:
+            return filtered
+    return models
+
+
+def list_free_vision_models_detailed():
+    """프로필 화면의 모델 선택 UI에 쓸 상세 정보(id/name/context_length/created)를 반환."""
+    entries = _fetch_free_vision_model_entries()
+    return [
+        {
+            "id": m.get("id", ""),
+            "name": m.get("name") or m.get("id", ""),
+            "context_length": m.get("context_length"),
+            "created": m.get("created"),
+        }
+        for m in entries
+    ]
 
 
 def to_resized_data_uri(file_like):
@@ -85,7 +114,7 @@ def call_vision_model(model, data_uri, api_key):
     )
 
 
-def recognize_ingredients(data_uri, api_key, on_attempt=None, attempts=3):
+def recognize_ingredients(data_uri, api_key, on_attempt=None, attempts=3, allowed_models=None):
     """매 시도마다 오픈라우터의 현재 무료 비전 모델 중 서로 다른 모델을 무작위로 골라 시도한다.
 
     429(요청 폭주)든 JSON 파싱 실패든 실패로 간주하고, 성공(재료 목록을 얻을 때)할 때까지
@@ -93,12 +122,16 @@ def recognize_ingredients(data_uri, api_key, on_attempt=None, attempts=3):
     매 시도 자체가 서로 다른 모델이라 폴백 역할을 겸한다.
 
     on_attempt: 선택적 콜백. (label, model) 을 인자로 호출되어 진행 상황을 UI에 전달할 수 있다.
+    allowed_models: 사용자가 프로필에서 선택한 모델 id 목록. 없으면 전체 무료 모델을 대상으로 한다.
     """
-    pool = list_free_vision_models()
+    pool = list_free_vision_models(allowed_models=allowed_models)
     random.shuffle(pool)
-    models = pool[:attempts]
-    while len(models) < attempts:
-        models.append(random.choice(SAFETY_NET_VISION_MODELS))
+    if pool:
+        # 풀이 attempts보다 적으면(예: 사용자가 모델을 1~2개만 선택한 경우) 안전망 모델로
+        # 채우지 않고 풀 안에서 순환한다 - 사용자가 고르지 않은 모델을 몰래 끼워넣지 않기 위함.
+        models = [pool[i % len(pool)] for i in range(attempts)]
+    else:
+        models = [random.choice(SAFETY_NET_VISION_MODELS) for _ in range(attempts)]
 
     response = None
     used_model = models[0]

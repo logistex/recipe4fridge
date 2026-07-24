@@ -60,6 +60,17 @@ def get_api_key():
         st.stop()
 
 
+def get_allowed_models(field_name):
+    """로그인한 사용자가 프로필에서 선택해둔 모델 목록을 읽어온다. 없으면 None(전체 사용)."""
+    user = current_user()
+    if not user:
+        return None
+    saved = db.get_user_by_id(user["id"])
+    if not saved:
+        return None
+    return db.parse_model_id_list(saved.get(field_name))
+
+
 def render_ingredient_editor():
     """② 식재료 확인 섹션. 2단계와 3단계 화면에서 공통으로 사용한다.
 
@@ -236,6 +247,7 @@ if wizard_step == 1:
                             data_uri,
                             api_key,
                             on_attempt=lambda label, model: status.write(f"{label}: `{model}` 호출 중..."),
+                            allowed_models=get_allowed_models("selected_vision_models"),
                         )
                     except requests.exceptions.Timeout:
                         st.session_state.recognition_error = "❌ 식재료 인식 실패: 요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요."
@@ -384,6 +396,7 @@ elif wizard_step == 3:
                         ingredient_names,
                         api_key,
                         on_attempt=lambda label, model: status.write(f"{label}: `{model}` 호출 중..."),
+                        allowed_models=get_allowed_models("selected_text_models"),
                         **recipe_options,
                     )
                 except requests.exceptions.Timeout:

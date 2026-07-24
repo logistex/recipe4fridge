@@ -21,16 +21,16 @@ SAFETY_NET_RECIPE_MODELS = [
 _EXCLUDE_KEYWORDS = ["safety", "rerank", "guard"]
 
 
-def list_free_text_models():
-    """오픈라우터에서 현재 사용 가능한 무료 텍스트 전용 모델 목록을 실시간으로 조회한다."""
+def _fetch_free_text_model_entries():
+    """오픈라우터에서 현재 사용 가능한 무료 텍스트 전용 모델의 원본 정보를 조회한다."""
     try:
         response = requests.get(MODELS_URL, timeout=10)
         response.raise_for_status()
         data = response.json().get("data", [])
     except (requests.exceptions.RequestException, ValueError):
-        return list(SAFETY_NET_RECIPE_MODELS)
+        return []
 
-    models = []
+    entries = []
     for m in data:
         model_id = m.get("id", "")
         if not model_id.endswith(":free"):
@@ -40,8 +40,37 @@ def list_free_text_models():
         modality = m.get("architecture", {}).get("input_modalities", [])
         if "image" in modality:
             continue  # 레시피 생성은 텍스트 전용 모델만 사용
-        models.append(model_id)
-    return models or list(SAFETY_NET_RECIPE_MODELS)
+        entries.append(m)
+    return entries
+
+
+def list_free_text_models(allowed_models=None):
+    """현재 사용 가능한 무료 텍스트 모델 id 목록. allowed_models가 주어지면 그 안에서만 고른다.
+
+    allowed_models로 걸러낸 결과가 비어있으면(사용자가 골라둔 모델이 전부 사라진 경우)
+    안전하게 전체 목록으로 되돌아간다.
+    """
+    entries = _fetch_free_text_model_entries()
+    models = [m.get("id", "") for m in entries] or list(SAFETY_NET_RECIPE_MODELS)
+    if allowed_models:
+        filtered = [m for m in models if m in allowed_models]
+        if filtered:
+            return filtered
+    return models
+
+
+def list_free_text_models_detailed():
+    """프로필 화면의 모델 선택 UI에 쓸 상세 정보(id/name/context_length/created)를 반환."""
+    entries = _fetch_free_text_model_entries()
+    return [
+        {
+            "id": m.get("id", ""),
+            "name": m.get("name") or m.get("id", ""),
+            "context_length": m.get("context_length"),
+            "created": m.get("created"),
+        }
+        for m in entries
+    ]
 
 
 def build_prompt(ingredient_names, cuisine=None, difficulty=None, time_pref=None, servings=None):
@@ -90,18 +119,22 @@ def call_recipe_model(model, ingredient_names, api_key, **options):
     )
 
 
-def generate_recipes(ingredient_names, api_key, on_attempt=None, attempts=3, **options):
+def generate_recipes(ingredient_names, api_key, on_attempt=None, attempts=3, allowed_models=None, **options):
     """매 시도마다 오픈라우터의 현재 무료 텍스트 모델 중 서로 다른 모델을 무작위로 골라 시도한다.
 
     429든 JSON 파싱 실패든 한국어가 아닌 응답이든 실패로 간주하고, 성공할 때까지 또는
     attempts 횟수만큼 매번 다른 모델로 재시도한다 (별도의 고정 폴백 모델 없이, 매 시도
     자체가 폴백 역할을 겸함).
+    allowed_models: 사용자가 프로필에서 선택한 모델 id 목록. 없으면 전체 무료 모델을 대상으로 한다.
     """
-    pool = list_free_text_models()
+    pool = list_free_text_models(allowed_models=allowed_models)
     random.shuffle(pool)
-    models = pool[:attempts]
-    while len(models) < attempts:
-        models.append(random.choice(SAFETY_NET_RECIPE_MODELS))
+    if pool:
+        # 풀이 attempts보다 적으면(예: 사용자가 모델을 1~2개만 선택한 경우) 안전망 모델로
+        # 채우지 않고 풀 안에서 순환한다 - 사용자가 고르지 않은 모델을 몰래 끼워넣지 않기 위함.
+        models = [pool[i % len(pool)] for i in range(attempts)]
+    else:
+        models = [random.choice(SAFETY_NET_RECIPE_MODELS) for _ in range(attempts)]
 
     response = None
     used_model = models[0]
