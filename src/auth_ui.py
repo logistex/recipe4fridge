@@ -94,7 +94,9 @@ def render_sidebar_auth():
                 try:
                     st.login()
                 except Exception as e:
-                    st.error(f"Google 로그인을 사용할 수 없습니다: {e}")
+                    st.error("Google 로그인을 사용할 수 없습니다. 잠시 후 다시 시도하거나 이메일로 로그인해주세요.")
+                    with st.expander("자세히 보기 (기술 정보)"):
+                        st.code(str(e))
 
             st.divider()
 

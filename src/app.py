@@ -184,14 +184,27 @@ st.markdown(
 st.session_state.setdefault("uploader_key", 0)
 st.session_state.setdefault("wizard_step", 1)
 
-header_col, restart_col = st.columns([5, 1])
-header_col.title("🥬 냉장고 레시피 추천")
-if restart_col.button("🔄 처음부터"):
+def _do_restart():
     for key in RESET_STATE_KEYS:
         st.session_state.pop(key, None)
     st.session_state.uploader_key += 1
     st.session_state.wizard_step = 1
     st.rerun()
+
+
+header_col, restart_col = st.columns([5, 1])
+header_col.title("🥬 냉장고 레시피 추천")
+with restart_col:
+    has_progress = st.session_state.wizard_step > 1 or bool(st.session_state.get("ingredients"))
+    if has_progress:
+        # 진행 중인 작업(인식된 재료/레시피)이 있을 때만 확인을 한 번 거치게 해서 실수로 잃지 않게 한다.
+        with st.popover("🔄 처음부터"):
+            st.write("지금까지 인식하거나 수정한 내용이 모두 사라집니다.")
+            if st.button("네, 처음부터 시작할게요", type="primary"):
+                _do_restart()
+    else:
+        if st.button("🔄 처음부터"):
+            _do_restart()
 
 api_key = get_api_key()
 wizard_step = st.session_state.wizard_step
@@ -250,9 +263,11 @@ if wizard_step == 1:
                             allowed_models=get_allowed_models("selected_vision_models"),
                         )
                     except requests.exceptions.Timeout:
+                        status.update(label="분석 실패", state="error")
                         st.session_state.recognition_error = "❌ 식재료 인식 실패: 요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요."
                         st.rerun()
                     except requests.exceptions.RequestException as e:
+                        status.update(label="분석 실패", state="error")
                         st.session_state.recognition_error = f"❌ 식재료 인식 실패: 네트워크 오류가 발생했습니다: {e}"
                         st.rerun()
                     status.update(label="분석 완료", state="complete")
@@ -292,7 +307,8 @@ if wizard_step == 1:
             if st.session_state.get("recognition_error"):
                 st.error(st.session_state.recognition_error)
                 if st.session_state.get("recognition_error_detail"):
-                    st.code(st.session_state.recognition_error_detail)
+                    with st.expander("자세히 보기 (기술 정보)"):
+                        st.code(st.session_state.recognition_error_detail)
                 if st.button("재료를 직접 입력할게요"):
                     st.session_state.ingredients = []
                     st.session_state.pop("recognition_error", None)
@@ -324,7 +340,12 @@ elif wizard_step == 2:
         st.session_state.wizard_step = 1
         st.rerun()
     ingredients = st.session_state.get("ingredients", [])
-    if nav_cols[1].button("다음: 레시피 추천 →", type="primary", disabled=not ingredients):
+    if nav_cols[1].button(
+        "다음: 레시피 추천 →",
+        type="primary",
+        disabled=not ingredients,
+        help=None if ingredients else "재료를 1개 이상 추가해야 다음 단계로 진행할 수 있습니다.",
+    ):
         st.session_state.wizard_step = 3
         st.rerun()
 
@@ -384,8 +405,17 @@ elif wizard_step == 3:
         if not can_request:
             st.caption(f"{RECIPE_REQUEST_COOLDOWN_SECONDS - elapsed:.0f}초 후 다시 시도할 수 있습니다.")
 
+        if not ingredient_names:
+            button_help = "재료를 1개 이상 추가해야 레시피를 생성할 수 있습니다."
+        elif not can_request:
+            button_help = f"{RECIPE_REQUEST_COOLDOWN_SECONDS - elapsed:.0f}초 후 다시 시도할 수 있습니다."
+        else:
+            button_help = None
         manual_click = st.button(
-            button_label, type="primary", disabled=not can_request or not ingredient_names
+            button_label,
+            type="primary",
+            disabled=not can_request or not ingredient_names,
+            help=button_help,
         )
 
         if manual_click:
@@ -400,11 +430,13 @@ elif wizard_step == 3:
                         **recipe_options,
                     )
                 except requests.exceptions.Timeout:
+                    status.update(label="생성 실패", state="error")
                     st.session_state.pop("recipes", None)
                     st.session_state.pop("selected_recipe", None)
                     st.error("❌ 레시피 생성 실패: 요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요.")
                     st.stop()
                 except requests.exceptions.RequestException as e:
+                    status.update(label="생성 실패", state="error")
                     st.session_state.pop("recipes", None)
                     st.session_state.pop("selected_recipe", None)
                     st.error(f"❌ 레시피 생성 실패: 네트워크 오류가 발생했습니다: {e}")
@@ -428,7 +460,8 @@ elif wizard_step == 3:
                 st.session_state.pop("recipes", None)
                 st.session_state.pop("selected_recipe", None)
                 st.error(f"❌ 레시피 생성 실패: 요청이 실패했습니다 (status {response.status_code}).")
-                st.code(response.text)
+                with st.expander("자세히 보기 (기술 정보)"):
+                    st.code(response.text)
             else:
                 body = response.json()
                 choices = body.get("choices")
@@ -436,7 +469,8 @@ elif wizard_step == 3:
                     st.session_state.pop("recipes", None)
                     st.session_state.pop("selected_recipe", None)
                     st.error("❌ 레시피 생성 실패: 모델 응답 형식이 올바르지 않습니다 (choices 없음). 잠시 후 다시 시도해주세요.")
-                    st.code(response.text)
+                    with st.expander("자세히 보기 (기술 정보)"):
+                        st.code(response.text)
                 else:
                     content = choices[0]["message"]["content"]
                     recipes = parse_recipes(content)
@@ -444,7 +478,8 @@ elif wizard_step == 3:
                         st.session_state.pop("recipes", None)
                         st.session_state.pop("selected_recipe", None)
                         st.error("❌ 레시피 생성 실패: 서로 다른 모델 3차 시도 모두 응답을 레시피로 변환하지 못했습니다.")
-                        st.code(content)
+                        with st.expander("자세히 보기 (기술 정보)"):
+                            st.code(content)
                     else:
                         st.session_state.recipes = recipes
                         st.session_state.selected_recipe = 0

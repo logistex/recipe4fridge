@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 
 import psycopg2
 import psycopg2.extras
+import psycopg2.pool
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -22,14 +23,33 @@ def _database_url():
         st.stop()
 
 
+@st.cache_resource
+def _connection_pool():
+    """프로세스당 커넥션 풀 하나. 쿼리마다 새로 연결(TCP+TLS 핸드셰이크)하는 비용을 없앤다.
+
+    Streamlit은 세션마다 별도 스레드에서 스크립트를 실행하므로 스레드 안전한 풀을 쓴다.
+    keepalives는 풀에 오래 놀고 있던 커넥션이 서버 쪽에서 끊기는 것을 줄이기 위한 설정.
+    """
+    return psycopg2.pool.ThreadedConnectionPool(
+        1,
+        5,
+        _database_url(),
+        cursor_factory=psycopg2.extras.RealDictCursor,
+        keepalives=1,
+        keepalives_idle=30,
+    )
+
+
 @contextmanager
 def get_connection():
-    conn = psycopg2.connect(_database_url(), cursor_factory=psycopg2.extras.RealDictCursor)
+    pool = _connection_pool()
+    conn = pool.getconn()
     try:
         yield conn
         conn.commit()
     finally:
-        conn.close()
+        # putconn은 트랜잭션이 남아있으면 롤백하고, 끊어진 커넥션은 닫아 풀에서 제거한다.
+        pool.putconn(conn)
 
 
 def init_db():

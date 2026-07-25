@@ -118,8 +118,9 @@ def _selected_ids(entries, edited_df):
     ]
 
 
-vision_entries = list_free_vision_models_detailed()
-text_entries = list_free_text_models_detailed()
+with st.spinner("사용 가능한 모델 목록을 불러오는 중입니다..."):
+    vision_entries = list_free_vision_models_detailed()
+    text_entries = list_free_text_models_detailed()
 saved_vision_ids = db.parse_model_id_list(saved.get("selected_vision_models"))
 saved_text_ids = db.parse_model_id_list(saved.get("selected_text_models"))
 

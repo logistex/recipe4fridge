@@ -33,8 +33,11 @@ else:
                     for i, step in enumerate(recipe["steps"], start=1):
                         st.write(f"{i}. {step}")
             with col_delete:
-                if st.button("삭제", key=f"delete_saved_{recipe['id']}"):
-                    delete_target = recipe["id"]
+                # 삭제는 되돌릴 수 없으므로 한 번 더 확인을 거친 뒤 삭제한다.
+                with st.popover("삭제"):
+                    st.write(f"'{recipe['name']}' 레시피를 삭제할까요?")
+                    if st.button("삭제 확인", key=f"delete_saved_{recipe['id']}", type="primary"):
+                        delete_target = recipe["id"]
 
     if delete_target is not None:
         db.delete_recipe(user["id"], delete_target)

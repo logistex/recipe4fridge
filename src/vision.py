@@ -7,6 +7,7 @@ import time
 import uuid
 
 import requests
+import streamlit as st
 from PIL import Image
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
@@ -28,16 +29,26 @@ SAFETY_NET_VISION_MODELS = [
 _EXCLUDE_KEYWORDS = ["safety", "rerank", "guard"]
 
 
+@st.cache_data(ttl=300, show_spinner=False)
+def _fetch_models_payload():
+    """오픈라우터 모델 목록 원본을 5분간 캐시한다.
+
+    실패하면 예외를 그대로 올려서 실패 결과가 캐시에 남지 않게 한다
+    (일시적인 네트워크 오류가 5분 동안 굳어지지 않도록).
+    """
+    response = requests.get(MODELS_URL, timeout=10)
+    response.raise_for_status()
+    return response.json().get("data", [])
+
+
 def _fetch_free_vision_model_entries():
     """오픈라우터에서 현재 사용 가능한 무료 비전(이미지 입력) 모델의 원본 정보를 조회한다.
 
-    무료 모델 라인업은 시간에 따라 계속 바뀌므로 매번 새로 조회한다.
+    무료 모델 라인업은 시간에 따라 계속 바뀌므로 5분 TTL로 다시 조회한다.
     조회 자체가 실패하면 빈 리스트를 반환한다 (호출부에서 안전망으로 대체).
     """
     try:
-        response = requests.get(MODELS_URL, timeout=10)
-        response.raise_for_status()
-        data = response.json().get("data", [])
+        data = _fetch_models_payload()
     except (requests.exceptions.RequestException, ValueError):
         return []
 
