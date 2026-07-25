@@ -40,6 +40,7 @@ RESET_STATE_KEYS = [
     "recognition_error",
     "recognition_error_detail",
     "used_vision_model",
+    "used_recipe_model",
     "recipes",
     "selected_recipe",
     "last_recipe_request_time",
@@ -448,7 +449,7 @@ elif wizard_step == 3:
                     st.stop()
                 status.update(label="생성 완료", state="complete")
 
-            st.caption(f"실제 응답 모델: `{used_recipe_model}`")
+            st.session_state.used_recipe_model = used_recipe_model
 
             if response.status_code == 429:
                 st.session_state.pop("recipes", None)
@@ -488,6 +489,12 @@ elif wizard_step == 3:
                     else:
                         st.session_state.recipes = recipes
                         st.session_state.selected_recipe = 0
+                        # 인디케이터(③ 레시피 추천)는 화면 상단, 이 성공 처리보다 먼저 그려진다.
+                        # 여기서 즉시 rerun해야 인디케이터가 방금 세팅된 recipes를 반영해 체크 표시로 바뀐다.
+                        st.rerun()
+
+        if st.session_state.get("used_recipe_model"):
+            st.caption(f"실제 응답 모델: `{st.session_state.used_recipe_model}`")
 
         if st.session_state.get("recipes"):
             st.caption("💡 매 요청마다 다른 레시피가 나올 수 있어요. 마음에 안 들면 다시 추천받아보세요.")
