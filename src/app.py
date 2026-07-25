@@ -212,7 +212,12 @@ wizard_step = st.session_state.wizard_step
 step_cols = st.columns(3)
 for i, col in enumerate(step_cols, start=1):
     label = WIZARD_STEP_LABELS[i - 1]
-    if i == wizard_step:
+    # 마지막 단계(③)는 다음 단계가 없어 i < wizard_step 조건으로는 절대 완료 표시가 되지 않는다.
+    # 레시피가 실제로 생성되었는지(st.session_state.recipes)를 완료 기준으로 따로 확인한다.
+    is_last_step_done = i == 3 and i == wizard_step and bool(st.session_state.get("recipes"))
+    if is_last_step_done:
+        col.markdown(f"✅ **:red[{label}]**")
+    elif i == wizard_step:
         col.markdown(f"**:red[{label}]**")
     elif i < wizard_step:
         col.markdown(f"✅ {label}")
