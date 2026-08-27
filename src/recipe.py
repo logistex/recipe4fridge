@@ -14,12 +14,26 @@ DIFFICULTY_OPTIONS = ["상관없음", "초급", "중급", "고급"]
 TIME_OPTIONS = ["상관없음", "15분 이내", "30분 이내", "30분 이상"]
 SERVINGS_OPTIONS = ["상관없음", "1인분", "2인분", "3인분", "4인분"]
 
-# 오픈라우터 무료 모델 목록 조회 자체가 실패할 경우를 위한 최소 안전망.
+# 오픈라우터 무료 모델 목록 조회 자체가 실패할 경우를 위한 최소 안전망 (2026-08-27 동작 확인).
 SAFETY_NET_RECIPE_MODELS = [
-    "openai/gpt-oss-20b:free",
-    "nvidia/nemotron-nano-9b-v2:free",
+    "minimax/minimax-m3:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
 ]
 _EXCLUDE_KEYWORDS = ["safety", "rerank", "guard"]
+
+# 2026-08-27 재료 7종으로 무료 모델 16종을 실측한 우선순위. 앞쪽일수록 먼저 시도한다.
+# 이미지 입력 모델도 텍스트 전용 프롬프트에 정상 응답하므로 후보에서 제외하지 않는다.
+#   minimax-m3         성공 3/3, 레시피 3개, 조리 3.9단계, 18초.
+#                      계정 일일 무료 한도(50회) 소진 상태에서도 상당수 응답함
+#                      (다른 모델은 같은 조건에서 전부 즉시 429). 다만 면제는 아님
+#   nemotron-3-super   성공 3/3, 레시피 3개, 조리 5.0단계, 44초. 조리 순서가 가장 상세
+#   north-mini-code    성공 3/3, 레시피 3개, 조리 3.6단계, 22초
+# 목록에 없는 모델은 이 뒤에 무작위 순서로 붙는다 (새로 등장한 무료 모델도 기회를 얻도록).
+PREFERRED_RECIPE_MODELS = [
+    "minimax/minimax-m3:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
+    "cohere/north-mini-code:free",
+]
 
 
 @st.cache_data(ttl=300, show_spinner=False)
@@ -35,7 +49,10 @@ def _fetch_models_payload():
 
 
 def _fetch_free_text_model_entries():
-    """오픈라우터에서 현재 사용 가능한 무료 텍스트 전용 모델의 원본 정보를 조회한다(5분 캐시)."""
+    """오픈라우터에서 레시피 생성에 쓸 수 있는 무료 모델의 원본 정보를 조회한다(5분 캐시).
+
+    이미지 입력을 함께 받는 모델도 텍스트 프롬프트에 정상 응답하므로 제외하지 않는다.
+    """
     try:
         data = _fetch_models_payload()
     except (requests.exceptions.RequestException, ValueError):
@@ -48,9 +65,6 @@ def _fetch_free_text_model_entries():
             continue
         if any(keyword in model_id.lower() for keyword in _EXCLUDE_KEYWORDS):
             continue
-        modality = m.get("architecture", {}).get("input_modalities", [])
-        if "image" in modality:
-            continue  # 레시피 생성은 텍스트 전용 모델만 사용
         entries.append(m)
     return entries
 
@@ -68,6 +82,18 @@ def list_free_text_models(allowed_models=None):
         if filtered:
             return filtered
     return models
+
+
+def prioritize_models(pool):
+    """실측 우선순위(PREFERRED_RECIPE_MODELS) 순서로 후보를 정렬한다.
+
+    우선순위 목록에 없는 모델은 뒤쪽에 무작위 순서로 배치한다. 무료 모델 라인업은
+    수시로 바뀌므로, 아직 실측하지 않은 새 모델도 뒤에서는 시도될 수 있게 남겨둔다.
+    """
+    ranked = [m for m in PREFERRED_RECIPE_MODELS if m in pool]
+    rest = [m for m in pool if m not in ranked]
+    random.shuffle(rest)
+    return ranked + rest
 
 
 def list_free_text_models_detailed():
@@ -131,15 +157,15 @@ def call_recipe_model(model, ingredient_names, api_key, **options):
 
 
 def generate_recipes(ingredient_names, api_key, on_attempt=None, attempts=3, allowed_models=None, **options):
-    """매 시도마다 오픈라우터의 현재 무료 텍스트 모델 중 서로 다른 모델을 무작위로 골라 시도한다.
+    """매 시도마다 오픈라우터의 현재 무료 텍스트 모델 중 서로 다른 모델을 순서대로 시도한다.
 
-    429든 JSON 파싱 실패든 한국어가 아닌 응답이든 실패로 간주하고, 성공할 때까지 또는
-    attempts 횟수만큼 매번 다른 모델로 재시도한다 (별도의 고정 폴백 모델 없이, 매 시도
-    자체가 폴백 역할을 겸함).
+    실측 우선순위(PREFERRED_RECIPE_MODELS)가 앞에 오고, 아직 실측하지 않은 모델이
+    무작위 순서로 뒤를 잇는다. 429든 JSON 파싱 실패든 한국어가 아닌 응답이든 실패로
+    간주하고, 성공할 때까지 또는 attempts 횟수만큼 다음 모델로 넘어간다 (별도의 고정
+    폴백 모델 없이, 매 시도 자체가 폴백 역할을 겸함).
     allowed_models: 사용자가 프로필에서 선택한 모델 id 목록. 없으면 전체 무료 모델을 대상으로 한다.
     """
-    pool = list_free_text_models(allowed_models=allowed_models)
-    random.shuffle(pool)
+    pool = prioritize_models(list_free_text_models(allowed_models=allowed_models))
     if pool:
         # 풀이 attempts보다 적으면(예: 사용자가 모델을 1~2개만 선택한 경우) 안전망 모델로
         # 채우지 않고 풀 안에서 순환한다 - 사용자가 고르지 않은 모델을 몰래 끼워넣지 않기 위함.
@@ -166,7 +192,8 @@ def generate_recipes(ingredient_names, api_key, on_attempt=None, attempts=3, all
             except ValueError:
                 pass
         if i < len(models) - 1:
-            time.sleep(1)
+            # 429는 모델별 순간 혼잡이라 1초로는 잘 풀리지 않는다. 시도마다 대기를 늘린다.
+            time.sleep(2 * (i + 1))
     return response, used_model
 
 

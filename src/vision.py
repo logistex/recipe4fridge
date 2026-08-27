@@ -16,17 +16,32 @@ MAX_IMAGE_DIMENSION = 1024
 UNIT_OPTIONS = ["개", "병", "봉지", "팩", "단", "g", "kg", "ml", "L", "기타"]
 RECOGNITION_PROMPT = (
     '이 냉장고 사진에서 보이는 식재료를 한국어로 인식해서 JSON 배열 형식으로만 답해줘. '
-    '각 항목은 name(이름), quantity(수량, 숫자), unit(단위: 개/병/봉지/팩/단/g/kg/ml/L 중 하나)을 포함해줘. '
-    '사진만으로 정확한 수량을 알기 어려우면 quantity는 1, unit은 "개"로 추정해줘.\n'
+    '각 항목은 name(이름), quantity(수량, 숫자), unit(단위: 개/병/봉지/팩/단/g/kg/ml/L 중 하나)을 포함해줘.\n'
+    '수량은 눈에 보이는 낱개를 하나씩 세어서 적어줘. '
+    '달걀판처럼 여러 개가 담긴 것도 팩이 아니라 보이는 알의 개수로 세어줘. '
+    '가려져서 셀 수 없을 때만 quantity를 1, unit을 "개"로 적어줘.\n'
+    '음식이 아닌 물건(보관용기, 그릇, 포장재)은 목록에 넣지 마.\n'
     '예: [{"name": "계란", "quantity": 6, "unit": "개"}, {"name": "우유", "quantity": 1, "unit": "개"}]'
 )
 
-# 오픈라우터 무료 모델 목록 조회 자체가 실패할 경우를 위한 최소 안전망 (과거에 정상 동작 확인된 모델).
+# 오픈라우터 무료 모델 목록 조회 자체가 실패할 경우를 위한 최소 안전망 (2026-08-27 동작 확인).
 SAFETY_NET_VISION_MODELS = [
-    "google/gemma-4-31b-it:free",
-    "nvidia/nemotron-nano-12b-v2-vl:free",
+    "minimax/minimax-m3:free",
+    "google/gemma-4-26b-a4b-it:free",
 ]
 _EXCLUDE_KEYWORDS = ["safety", "rerank", "guard"]
+
+# 2026-08-27 냉장고 사진으로 실측한 우선순위. 앞쪽일수록 먼저 시도한다.
+# 무료 모델은 응답 자체가 거부되는 경우가 잦아, 성공률을 인식 정확도보다 앞에 둔다.
+#   minimax-m3        성공 3/3, 품목 7/7, 개수 4.7/7, 4초
+#   gemma-4-26b       성공 2/13, 품목 7/7, 개수 7.0/7, 6초
+#   gemma-4-31b       성공 1/13, 품목 7/7, 개수 6.0/7, 9초
+# 목록에 없는 모델은 이 뒤에 무작위 순서로 붙는다 (새로 등장한 무료 모델도 기회를 얻도록).
+PREFERRED_VISION_MODELS = [
+    "minimax/minimax-m3:free",
+    "google/gemma-4-26b-a4b-it:free",
+    "google/gemma-4-31b-it:free",
+]
 
 
 @st.cache_data(ttl=300, show_spinner=False)
@@ -80,6 +95,18 @@ def list_free_vision_models(allowed_models=None):
     return models
 
 
+def prioritize_models(pool):
+    """실측 우선순위(PREFERRED_VISION_MODELS) 순서로 후보를 정렬한다.
+
+    우선순위 목록에 없는 모델은 뒤쪽에 무작위 순서로 배치한다. 무료 모델 라인업은
+    수시로 바뀌므로, 아직 실측하지 않은 새 모델도 뒤에서는 시도될 수 있게 남겨둔다.
+    """
+    ranked = [m for m in PREFERRED_VISION_MODELS if m in pool]
+    rest = [m for m in pool if m not in ranked]
+    random.shuffle(rest)
+    return ranked + rest
+
+
 def list_free_vision_models_detailed():
     """프로필 화면의 모델 선택 UI에 쓸 상세 정보(id/name/context_length/created)를 반환."""
     entries = _fetch_free_vision_model_entries()
@@ -126,17 +153,17 @@ def call_vision_model(model, data_uri, api_key):
 
 
 def recognize_ingredients(data_uri, api_key, on_attempt=None, attempts=3, allowed_models=None):
-    """매 시도마다 오픈라우터의 현재 무료 비전 모델 중 서로 다른 모델을 무작위로 골라 시도한다.
+    """매 시도마다 오픈라우터의 현재 무료 비전 모델 중 서로 다른 모델을 순서대로 시도한다.
 
-    429(요청 폭주)든 JSON 파싱 실패든 실패로 간주하고, 성공(재료 목록을 얻을 때)할 때까지
-    또는 attempts 횟수만큼 매번 다른 모델로 재시도한다. 고정된 "폴백 모델" 개념 대신,
-    매 시도 자체가 서로 다른 모델이라 폴백 역할을 겸한다.
+    실측 우선순위(PREFERRED_VISION_MODELS)가 앞에 오고, 아직 실측하지 않은 모델이
+    무작위 순서로 뒤를 잇는다. 429(요청 폭주)든 JSON 파싱 실패든 실패로 간주하고,
+    성공(재료 목록을 얻을 때)할 때까지 또는 attempts 횟수만큼 다음 모델로 넘어간다.
+    고정된 "폴백 모델" 개념 대신, 매 시도 자체가 서로 다른 모델이라 폴백 역할을 겸한다.
 
     on_attempt: 선택적 콜백. (label, model) 을 인자로 호출되어 진행 상황을 UI에 전달할 수 있다.
     allowed_models: 사용자가 프로필에서 선택한 모델 id 목록. 없으면 전체 무료 모델을 대상으로 한다.
     """
-    pool = list_free_vision_models(allowed_models=allowed_models)
-    random.shuffle(pool)
+    pool = prioritize_models(list_free_vision_models(allowed_models=allowed_models))
     if pool:
         # 풀이 attempts보다 적으면(예: 사용자가 모델을 1~2개만 선택한 경우) 안전망 모델로
         # 채우지 않고 풀 안에서 순환한다 - 사용자가 고르지 않은 모델을 몰래 끼워넣지 않기 위함.
@@ -161,7 +188,8 @@ def recognize_ingredients(data_uri, api_key, on_attempt=None, attempts=3, allowe
             except ValueError:
                 pass
         if i < len(models) - 1:
-            time.sleep(1)
+            # 429는 모델별 순간 혼잡이라 1초로는 잘 풀리지 않는다. 시도마다 대기를 늘린다.
+            time.sleep(2 * (i + 1))
     return response, used_model
 
 

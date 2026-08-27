@@ -137,9 +137,9 @@ else:
         use_container_width=True,
     )
 
-st.markdown("**레시피 생성(텍스트) 모델**")
+st.markdown("**레시피 생성 모델**")
 if not text_entries:
-    st.warning("현재 오픈라우터에서 무료 텍스트 모델 목록을 가져오지 못했습니다. 잠시 후 다시 시도해주세요.")
+    st.warning("현재 오픈라우터에서 레시피 생성용 무료 모델 목록을 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.")
     edited_text = None
 else:
     edited_text = st.data_editor(
