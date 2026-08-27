@@ -1,6 +1,8 @@
 import os
 import time
 import uuid
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import requests
 import streamlit as st
@@ -49,6 +51,51 @@ RESET_STATE_KEYS = [
     "recipe_time",
     "recipe_servings",
 ]
+
+
+def rate_limit_message(response, action):
+    """429 응답을 계정 일일 한도와 모델 순간 혼잡으로 구분해 안내 문구를 만든다.
+
+    둘은 사용자가 할 일이 다르다. 일일 한도는 초기화될 때까지 다시 눌러도 소용없고,
+    순간 혼잡은 잠시 뒤 다시 시도하면 대체로 풀린다.
+    """
+    try:
+        error = (response.json() or {}).get("error") or {}
+    except ValueError:
+        error = {}
+    metadata = error.get("metadata") or {}
+    is_daily = (
+        "free-models-per-day" in str(error.get("message") or "")
+        or metadata.get("limit_source") == "openrouter_free_tier_daily"
+    )
+    if not is_daily:
+        return (
+            f"❌ {action} 실패: 무료 모델 3곳이 모두 혼잡합니다 (429). "
+            "1~2분 뒤에 다시 시도해 주세요."
+        )
+
+    headers = metadata.get("headers") or {}
+    limit = headers.get("X-RateLimit-Limit")
+    quota = f"오늘 쓸 수 있는 무료 호출 {limit}회를" if limit else "오늘 쓸 수 있는 무료 호출을"
+    when = _format_reset_time(headers.get("X-RateLimit-Reset"))
+    return (
+        f"❌ {action} 실패: {quota} 모두 사용했습니다. "
+        f"{when} 초기화되며, 그때까지는 다시 시도해도 같은 오류가 납니다."
+    )
+
+
+def _format_reset_time(reset_ms):
+    """한도 초기화 시각(에포크 밀리초)을 한국 시각 문구로 바꾼다.
+
+    배포 환경(Streamlit Cloud)의 시간대가 UTC이므로 한국 시각으로 명시해 변환한다.
+    """
+    try:
+        moment = datetime.fromtimestamp(int(reset_ms) / 1000, ZoneInfo("Asia/Seoul"))
+    except (TypeError, ValueError, OSError, OverflowError):
+        return "잠시 후"
+    half = "오전" if moment.hour < 12 else "오후"
+    hour = moment.hour % 12 or 12
+    return f"{moment.month}월 {moment.day}일 {half} {hour}시에"
 
 
 def get_api_key():
@@ -281,10 +328,8 @@ if wizard_step == 1:
                 st.session_state.used_vision_model = used_model
 
                 if response.status_code == 429:
-                    st.session_state.recognition_error = (
-                        "❌ 식재료 인식 실패: 서로 다른 무료 비전 모델로 3차 시도까지 모두 요청이 제한되었습니다 (429). "
-                        "잠시 후 다시 시도해주세요."
-                    )
+                    st.session_state.recognition_error = rate_limit_message(response, "식재료 인식")
+                    st.session_state.recognition_error_detail = response.text
                 elif response.status_code >= 500:
                     st.session_state.recognition_error = "❌ 식재료 인식 실패: 모델 제공자 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
                 elif response.status_code != 200:
@@ -454,10 +499,9 @@ elif wizard_step == 3:
             if response.status_code == 429:
                 st.session_state.pop("recipes", None)
                 st.session_state.pop("selected_recipe", None)
-                st.error(
-                    "❌ 레시피 생성 실패: 서로 다른 무료 텍스트 모델로 3차 시도까지 모두 요청이 제한되었습니다 (429). "
-                    "잠시 후 다시 시도해주세요."
-                )
+                st.error(rate_limit_message(response, "레시피 생성"))
+                with st.expander("자세히 보기 (기술 정보)"):
+                    st.code(response.text)
             elif response.status_code >= 500:
                 st.session_state.pop("recipes", None)
                 st.session_state.pop("selected_recipe", None)
