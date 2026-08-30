@@ -29,6 +29,11 @@ def _connection_pool():
 
     Streamlit은 세션마다 별도 스레드에서 스크립트를 실행하므로 스레드 안전한 풀을 쓴다.
     keepalives는 풀에 오래 놀고 있던 커넥션이 서버 쪽에서 끊기는 것을 줄이기 위한 설정.
+
+    tcp_user_timeout이 없으면, 죽은 소켓에 쿼리를 보냈을 때 TCP 기본값 때문에 10분 넘게
+    매달린 뒤에야 "could not send data to server: Connection timed out"으로 실패한다.
+    Streamlit Community Cloud는 트래픽이 없으면 앱 컨테이너를 재우는데, 자는 동안에는
+    keepalive 패킷도 나가지 않아 풀 안의 커넥션이 통째로 죽은 채 남는다.
     """
     return psycopg2.pool.ThreadedConnectionPool(
         1,
@@ -37,13 +42,38 @@ def _connection_pool():
         cursor_factory=psycopg2.extras.RealDictCursor,
         keepalives=1,
         keepalives_idle=30,
+        keepalives_interval=10,
+        keepalives_count=3,
+        tcp_user_timeout=8000,
     )
+
+
+def _checkout_live_connection():
+    """풀에서 살아있는 커넥션을 꺼낸다. 죽어있으면 풀을 통째로 버리고 새로 만든다.
+
+    앱이 잠들었다 깨어나면 풀 안의 커넥션이 하나가 아니라 전부 같은 이유로 죽어 있다.
+    그래서 커넥션 하나만 교체하지 않고 풀 전체를 폐기한다.
+    """
+    for last_attempt in (False, True):
+        pool = _connection_pool()
+        conn = pool.getconn()
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1")
+            return pool, conn
+        except psycopg2.Error:
+            try:
+                pool.closeall()
+            except psycopg2.Error:
+                pass
+            _connection_pool.clear()
+            if last_attempt:
+                raise
 
 
 @contextmanager
 def get_connection():
-    pool = _connection_pool()
-    conn = pool.getconn()
+    pool, conn = _checkout_live_connection()
     try:
         yield conn
         conn.commit()
