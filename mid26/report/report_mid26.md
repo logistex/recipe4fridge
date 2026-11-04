@@ -31,9 +31,9 @@
 
 [슬라이드 0] 요약: 이 보고서를 1장으로 줄인 것
 
-[![영상 0](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_0.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#b28352532309412b9b2814a932a2d7a2)
+[![영상 0](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_0.png)](https://logistex.github.io/mid26-video/video_0.mp4)
 
-[영상 0] 요약 슬라이드의 설명 영상(169초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 0] 요약 슬라이드의 설명 영상(169초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 이 과제는 "앱이 돌아가는가"보다 "앱이 규칙을 지키는지 어떻게 확인했는가"를 묻는 것으로 파악했고, 이 보고서는 교수가 학생과 같은 공고로 이 과제를 직접 수행한 기록임(1장)
   - 과제는 데이터과학 미니프로젝트(AI-X)의 중간고사 대체 과제로, 학생들이 팀 프로젝트의 팀을 스스로 편성하는 웹 앱을 만들어 Streamlit에 배포하는 것이고, 수행은 6장 노트의 절차를 따랐음
@@ -133,9 +133,9 @@ A5\. 대화 기록
 
 [슬라이드 1.1] 과제의 배경과 목적
 
-[![영상 1](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_1-1.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#221d38b3e3344df9993e19ee4fa95a7c)
+[![영상 1](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_1-1.png)](https://logistex.github.io/mid26-video/video_1-1.mp4)
 
-[영상 1] 1.1절 슬라이드의 설명 영상(151초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 1] 1.1절 슬라이드의 설명 영상(151초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 이 과제의 목적은 AI가 만든 앱이 정해진 규칙을 지키는지를 학생이 스스로 확인하고, 확인한 근거를 남기는 능력을 기르는 것으로 파악했음
   - 과제 공고[3]의 채점은 공개하지 않은 시나리오 3개를 배포한 앱에서 자동으로 실행해, 단계마다 결과 안내의 첫 낱말(승인, 대기, 거절, 막힘)이 기대 결과와 같은지 판정함(공고 6.2절)
@@ -158,9 +158,9 @@ A5\. 대화 기록
 
 [슬라이드 1.2] 과제의 범위와 배점
 
-[![영상 2](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_1-2.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#aba24f252058477dbcf76ed67d0107c3)
+[![영상 2](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_1-2.png)](https://logistex.github.io/mid26-video/video_1-2.mp4)
 
-[영상 2] 1.2절 슬라이드의 설명 영상(123초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 2] 1.2절 슬라이드의 설명 영상(123초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 과제는 팀 프로젝트를 위한 팀을 학생들이 스스로 편성하는 웹 앱을 만들어 Streamlit에 배포하고, 제출물 4가지(공고 1장)와 보고서 `README.md`를 내는 것임
   - 배점은 시나리오 3개와 시나리오 밖의 4개 구분으로 나뉨([표 2])
@@ -183,9 +183,9 @@ A5\. 대화 기록
 
 [슬라이드 1.3] 수행 방법과 환경
 
-[![영상 3](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_1-3.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#7f1546b89b9f4082a23cefd9957a1d81)
+[![영상 3](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_1-3.png)](https://logistex.github.io/mid26-video/video_1-3.mp4)
 
-[영상 3] 1.3절 슬라이드의 설명 영상(263초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 3] 1.3절 슬라이드의 설명 영상(263초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 앱은 클로드(Claude Code)가 만들었고, 작성자는 학생처럼 프롬프트로 지시하고 결과를 공고와 대조해 다시 확인했음
   - 이 보고서의 작성자는 신 교수임. 프롬프트를 쓰고 결과를 다시 확인하는 작성자의 일 가운데 상당 부분은, 신 교수의 지시를 받은 별도의 클로드 세션이 대신했음. 이 보고서에서는 그 일을 작성자가 한 일로 적음([표 3])
@@ -249,15 +249,15 @@ A5\. 대화 기록
 
 [슬라이드 1.4] 보고서의 구성과 용어
 
-[![영상 4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_1-4.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#5895165d8fc143949ac02354679092b0)
+[![영상 4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_1-4.png)](https://logistex.github.io/mid26-video/video_1-4.mp4)
 
-[영상 4] 1.4절 슬라이드의 설명 영상(184초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 4] 1.4절 슬라이드의 설명 영상(184초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 2장은 준비와 설계, 3장은 구현과 확인, 4장은 배포와 개선, 5장은 연습 시나리오로 팀 편성하기, 6장은 제출 전 확인, 7장은 결론과 앱을 더 발전시키는 방향을 적음
   - 공고나 노트와 다르게 진행된 곳은 "사실 → 알아챈 방법 → 판단과 조치 → 결과"의 순서로 적음
   - 공고와 노트의 내용은 옮겨 적지 않고 절 번호로 가리킴. "공고 부록 1~3"은 공고의 연습 시나리오이고, 이 보고서의 부록은 A1~A5로 부름
   - 그림은 [그림 N], 표는 [표 N], 동영상은 [영상 N]으로 번호를 붙임. 그림 번호와 제목은 그림 아래에, 표 번호와 제목은 표 위에 둠(보고서 작성 지침[1] 3.8절)
-  - 절마다 첫머리에 그 절을 1장으로 줄인 슬라이드를 [슬라이드 절 번호]로 두었고, 슬라이드 바로 밑에 그 슬라이드를 설명하는 영상을 두었음. \[슬라이드 3\](구현 3단계의 개요)에는 영상을 두지 않았음. 영상 그림을 누르면 노션 페이지에서 그 영상이 재생됨
+  - 절마다 첫머리에 그 절을 1장으로 줄인 슬라이드를 [슬라이드 절 번호]로 두었고, 슬라이드 바로 밑에 그 슬라이드를 설명하는 영상을 두었음. \[슬라이드 3\](구현 3단계의 개요)에는 영상을 두지 않았음. PDF, Word, 마크다운에서는 영상 그림이나 [표 7]의 파일 이름을 누르면 브라우저에서 그 영상만 재생되고(영상 전용 저장소 logistex/mid26-video), 노션 페이지에서는 영상이 그 자리에서 재생됨
   - 화면 그림에서 주목할 곳은 빨간 상자로 표시했고, 그림 설명에 그 곳을 밝힘
 - 이 보고서에 자주 나오는 용어는 [표 6]에 모았음
 
@@ -288,40 +288,40 @@ A5\. 대화 기록
 
 | 번호 | 절 | 내용 | 길이 | 파일 |
 |---|---|---|---|---|
-| [영상 0] | 요약 | 보고서 요약 | 169초 | [video_0.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_0.mp4) |
-| [영상 1] | 1.1절 | 과제의 배경과 목적 | 151초 | [video_1-1.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_1-1.mp4) |
-| [영상 2] | 1.2절 | 과제의 범위와 배점 | 123초 | [video_1-2.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_1-2.mp4) |
-| [영상 3] | 1.3절 | 수행 방법과 환경 | 263초 | [video_1-3.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_1-3.mp4) |
-| [영상 4] | 1.4절 | 보고서의 구성과 용어 | 184초 | [video_1-4.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_1-4.mp4) |
-| [영상 5] | 2.1절 | 키 관리와 git 저장소 준비 | 108초 | [video_2-1.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_2-1.mp4) |
-| [영상 6] | 2.2절 | AI 모델 고르기와 연결 시험 | 103초 | [video_2-2.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_2-2.mp4) |
-| [영상 7] | 2.3절 | PRD와 구현 계획의 작성 | 134초 | [video_2-3.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_2-3.mp4) |
-| [영상 8] | 2.4절 | DB 설계와 schema.sql | 387초 | [video_2-4.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_2-4.mp4) |
-| [영상 9] | 3.1절 | 1단계: 로그인과 명단 올리기 | 136초 | [video_3-1.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_3-1.mp4) |
-| [영상 10] | 3.2절 | 2단계: 지원, 투표, 마감과 규칙 검사 | 170초 | [video_3-2.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_3-2.mp4) |
-| [영상 11] | 3.3절 | 3단계: AI 배정과 실패 처리 | 149초 | [video_3-3.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_3-3.mp4) |
-| [영상 12] | 4.1절 | 비공개 저장소와 Streamlit 배포 | 138초 | [video_4-1.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_4-1.mp4) |
-| [영상 13] | 4.2절 | 시험과 노트의 사례로 찾은 문제 3가지를 한 번에 고침 | 253초 | [video_4-2.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_4-2.mp4) |
-| [영상 14] | 4.3절 | 보안 점검 | 323초 | [video_4-3.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_4-3.mp4) |
-| [영상 15] | 4.4절 | DB 일시정지 막기와 무료 모델의 하루 호출 수 관리 | 193초 | [video_4-4.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_4-4.mp4) |
-| [영상 16] | 5.1절 | 시나리오와 확인 방법 | 319초 | [video_5-1.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_5-1.mp4) |
-| [영상 17] | 5.2.1항 | 쉬움 시나리오 | 133초 | [video_5-2-1.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_5-2-1.mp4) |
-| [영상 18] | 5.2.2항 | 중간 시나리오 | 166초 | [video_5-2-2.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_5-2-2.mp4) |
-| [영상 19] | 5.2.3항 | 어려움 시나리오 | 206초 | [video_5-2-3.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_5-2-3.mp4) |
-| [영상 20] | 5.3.1항 | 쉬움 시나리오(앱이 직접 배정) | 117초 | [video_5-3-1.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_5-3-1.mp4) |
-| [영상 21] | 5.3.2항 | 중간 시나리오(앱이 직접 배정) | 101초 | [video_5-3-2.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_5-3-2.mp4) |
-| [영상 22] | 5.3.3항 | 어려움 시나리오(앱이 직접 배정) | 119초 | [video_5-3-3.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_5-3-3.mp4) |
-| [영상 23] | 6.1절 | 자체 채점표 | 206초 | [video_6-1.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_6-1.mp4) |
-| [영상 24] | 6.2절 | 기능별 해결 방법과 점수의 대조 | 206초 | [video_6-2.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_6-2.mp4) |
-| [영상 25] | 6.3절 | 감점 항목 21개의 대조 | 198초 | [video_6-3.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_6-3.mp4) |
-| [영상 26] | 6.4절 | README.md 사례 8건과 다시 쓴 까닭 | 271초 | [video_6-4.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_6-4.mp4) |
-| [영상 27] | 6.5절 | 제출물의 확인 | 192초 | [video_6-5.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_6-5.mp4) |
-| [영상 28] | 7장 | 결론의 개요 | 77초 | [video_7.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_7.mp4) |
-| [영상 29] | 7.1절 | 결과의 요약 | 194초 | [video_7-1.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_7-1.mp4) |
-| [영상 30] | 7.2절 | 클로드가 노트, 공고, 기록과 다르게 한 점의 해석 | 278초 | [video_7-2.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_7-2.mp4) |
-| [영상 31] | 7.3절 | 남은 문제와 공고, 노트의 보완 제안 | 332초 | [video_7-3.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_7-3.mp4) |
-| [영상 32] | 7.4절 | 앱을 더 발전시키는 방향 | 321초 | [video_7-4.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_7-4.mp4) |
-| [영상 33] | 7.5절 | 배운 점, 느낀 점, 다짐한 점 | 206초 | [video_7-5.mp4](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/video/video_7-5.mp4) |
+| [영상 0] | 요약 | 보고서 요약 | 169초 | [video_0.mp4](https://logistex.github.io/mid26-video/video_0.mp4) |
+| [영상 1] | 1.1절 | 과제의 배경과 목적 | 151초 | [video_1-1.mp4](https://logistex.github.io/mid26-video/video_1-1.mp4) |
+| [영상 2] | 1.2절 | 과제의 범위와 배점 | 123초 | [video_1-2.mp4](https://logistex.github.io/mid26-video/video_1-2.mp4) |
+| [영상 3] | 1.3절 | 수행 방법과 환경 | 263초 | [video_1-3.mp4](https://logistex.github.io/mid26-video/video_1-3.mp4) |
+| [영상 4] | 1.4절 | 보고서의 구성과 용어 | 184초 | [video_1-4.mp4](https://logistex.github.io/mid26-video/video_1-4.mp4) |
+| [영상 5] | 2.1절 | 키 관리와 git 저장소 준비 | 108초 | [video_2-1.mp4](https://logistex.github.io/mid26-video/video_2-1.mp4) |
+| [영상 6] | 2.2절 | AI 모델 고르기와 연결 시험 | 103초 | [video_2-2.mp4](https://logistex.github.io/mid26-video/video_2-2.mp4) |
+| [영상 7] | 2.3절 | PRD와 구현 계획의 작성 | 134초 | [video_2-3.mp4](https://logistex.github.io/mid26-video/video_2-3.mp4) |
+| [영상 8] | 2.4절 | DB 설계와 schema.sql | 387초 | [video_2-4.mp4](https://logistex.github.io/mid26-video/video_2-4.mp4) |
+| [영상 9] | 3.1절 | 1단계: 로그인과 명단 올리기 | 136초 | [video_3-1.mp4](https://logistex.github.io/mid26-video/video_3-1.mp4) |
+| [영상 10] | 3.2절 | 2단계: 지원, 투표, 마감과 규칙 검사 | 170초 | [video_3-2.mp4](https://logistex.github.io/mid26-video/video_3-2.mp4) |
+| [영상 11] | 3.3절 | 3단계: AI 배정과 실패 처리 | 149초 | [video_3-3.mp4](https://logistex.github.io/mid26-video/video_3-3.mp4) |
+| [영상 12] | 4.1절 | 비공개 저장소와 Streamlit 배포 | 138초 | [video_4-1.mp4](https://logistex.github.io/mid26-video/video_4-1.mp4) |
+| [영상 13] | 4.2절 | 시험과 노트의 사례로 찾은 문제 3가지를 한 번에 고침 | 253초 | [video_4-2.mp4](https://logistex.github.io/mid26-video/video_4-2.mp4) |
+| [영상 14] | 4.3절 | 보안 점검 | 323초 | [video_4-3.mp4](https://logistex.github.io/mid26-video/video_4-3.mp4) |
+| [영상 15] | 4.4절 | DB 일시정지 막기와 무료 모델의 하루 호출 수 관리 | 193초 | [video_4-4.mp4](https://logistex.github.io/mid26-video/video_4-4.mp4) |
+| [영상 16] | 5.1절 | 시나리오와 확인 방법 | 319초 | [video_5-1.mp4](https://logistex.github.io/mid26-video/video_5-1.mp4) |
+| [영상 17] | 5.2.1항 | 쉬움 시나리오 | 133초 | [video_5-2-1.mp4](https://logistex.github.io/mid26-video/video_5-2-1.mp4) |
+| [영상 18] | 5.2.2항 | 중간 시나리오 | 166초 | [video_5-2-2.mp4](https://logistex.github.io/mid26-video/video_5-2-2.mp4) |
+| [영상 19] | 5.2.3항 | 어려움 시나리오 | 206초 | [video_5-2-3.mp4](https://logistex.github.io/mid26-video/video_5-2-3.mp4) |
+| [영상 20] | 5.3.1항 | 쉬움 시나리오(앱이 직접 배정) | 117초 | [video_5-3-1.mp4](https://logistex.github.io/mid26-video/video_5-3-1.mp4) |
+| [영상 21] | 5.3.2항 | 중간 시나리오(앱이 직접 배정) | 101초 | [video_5-3-2.mp4](https://logistex.github.io/mid26-video/video_5-3-2.mp4) |
+| [영상 22] | 5.3.3항 | 어려움 시나리오(앱이 직접 배정) | 119초 | [video_5-3-3.mp4](https://logistex.github.io/mid26-video/video_5-3-3.mp4) |
+| [영상 23] | 6.1절 | 자체 채점표 | 206초 | [video_6-1.mp4](https://logistex.github.io/mid26-video/video_6-1.mp4) |
+| [영상 24] | 6.2절 | 기능별 해결 방법과 점수의 대조 | 206초 | [video_6-2.mp4](https://logistex.github.io/mid26-video/video_6-2.mp4) |
+| [영상 25] | 6.3절 | 감점 항목 21개의 대조 | 198초 | [video_6-3.mp4](https://logistex.github.io/mid26-video/video_6-3.mp4) |
+| [영상 26] | 6.4절 | README.md 사례 8건과 다시 쓴 까닭 | 271초 | [video_6-4.mp4](https://logistex.github.io/mid26-video/video_6-4.mp4) |
+| [영상 27] | 6.5절 | 제출물의 확인 | 192초 | [video_6-5.mp4](https://logistex.github.io/mid26-video/video_6-5.mp4) |
+| [영상 28] | 7장 | 결론의 개요 | 77초 | [video_7.mp4](https://logistex.github.io/mid26-video/video_7.mp4) |
+| [영상 29] | 7.1절 | 결과의 요약 | 194초 | [video_7-1.mp4](https://logistex.github.io/mid26-video/video_7-1.mp4) |
+| [영상 30] | 7.2절 | 클로드가 노트, 공고, 기록과 다르게 한 점의 해석 | 278초 | [video_7-2.mp4](https://logistex.github.io/mid26-video/video_7-2.mp4) |
+| [영상 31] | 7.3절 | 남은 문제와 공고, 노트의 보완 제안 | 332초 | [video_7-3.mp4](https://logistex.github.io/mid26-video/video_7-3.mp4) |
+| [영상 32] | 7.4절 | 앱을 더 발전시키는 방향 | 321초 | [video_7-4.mp4](https://logistex.github.io/mid26-video/video_7-4.mp4) |
+| [영상 33] | 7.5절 | 배운 점, 느낀 점, 다짐한 점 | 206초 | [video_7-5.mp4](https://logistex.github.io/mid26-video/video_7-5.mp4) |
 
 ## 2. 준비와 설계
 
@@ -334,9 +334,9 @@ A5\. 대화 기록
 
 [슬라이드 2.1] 키 관리와 git 저장소 준비
 
-[![영상 5](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_2-1.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#2fd5bc8e05c34fc3a65dc5735b039dd5)
+[![영상 5](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_2-1.png)](https://logistex.github.io/mid26-video/video_2-1.mp4)
 
-[영상 5] 2.1절 슬라이드의 설명 영상(108초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 5] 2.1절 슬라이드의 설명 영상(108초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 키 3개를 `.env`에 두고 git이 이 파일을 올리지 않게 준비했으나, 첫 프롬프트에서 클로드는 git 저장소를 만들지 않았음
   - 작업 폴더를 만들고 공고 PDF, CSV 3개, `.env`를 넣었음(10/30 21:25). `.env`에는 `OPENROUTER_API_KEY`, `DATABASE_URL`, `ADMIN_PASSWORD`가 있음(공고 4.1절)
@@ -360,9 +360,9 @@ A5\. 대화 기록
 
 [슬라이드 2.2] AI 모델 고르기와 연결 시험
 
-[![영상 6](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_2-2.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#4521272ba7ca49f496845fb12a41d037)
+[![영상 6](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_2-2.png)](https://logistex.github.io/mid26-video/video_2-2.mp4)
 
-[영상 6] 2.2절 슬라이드의 설명 영상(103초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 6] 2.2절 슬라이드의 설명 영상(103초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 오픈라우터의 무료 텍스트 모델 6개를 시험해 1차 `nvidia/nemotron-3-ultra-550b-a55b:free`, 2차 `cohere/north-mini-code:free`, 3차 `nvidia/nemotron-3.5-lightning:free`를 골랐음
   - 후보는 오픈라우터 모델 목록 API에서 이름이 `:free`로 끝나는 텍스트 모델 16개를 받아 골랐음(10/30 21:28)
@@ -400,9 +400,9 @@ A5\. 대화 기록
 
 [슬라이드 2.3] PRD와 구현 계획의 작성
 
-[![영상 7](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_2-3.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#d0e54a55c7794b72b169036422ae0d99)
+[![영상 7](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_2-3.png)](https://logistex.github.io/mid26-video/video_2-3.mp4)
 
-[영상 7] 2.3절 슬라이드의 설명 영상(134초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 7] 2.3절 슬라이드의 설명 영상(134초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - PRD를 3단계로 나눠 쓰고 구현 계획도 쓰게 했고, PRD가 공고와 다른 곳 3건을 찾아 구현 전에 고쳤음([표 9])
   - 프롬프트 3은 6장 노트 6.4.4.1목(3단계 PRD 작성 지시)의 프롬프트를 이 과제에 맞게 바꾼 것임(A2의 프롬프트 3)
@@ -438,9 +438,9 @@ A5\. 대화 기록
 
 [슬라이드 2.4] DB 설계와 schema.sql
 
-[![영상 8](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_2-4.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#5ab360944464400d9eb9b0f7685e3500)
+[![영상 8](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_2-4.png)](https://logistex.github.io/mid26-video/video_2-4.mp4)
 
-[영상 8] 2.4절 슬라이드의 설명 영상(387초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 8] 2.4절 슬라이드의 설명 영상(387초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - DB는 공고 5장(DB 최소 참고안)의 테이블 7개에 AI 호출 기록 테이블 1개를 더한 8개로 설계했고, 규칙 일부는 그 규칙을 어기는 행이 저장되지 않게 DB 제약으로도 막았음([그림 4])
   - 테이블을 만드는 SQL은 저장소의 `schema.sql`에 있음. 채점자는 학생의 Supabase를 열어 볼 수 없으므로 이 파일로 유일성 제약, 테이블 이름, 비밀번호 해시 열을 확인한다고 공고 5장(DB 최소 참고안)이 밝힘
@@ -511,9 +511,9 @@ A5\. 대화 기록
 
 [슬라이드 3.1] 1단계: 로그인과 명단 올리기
 
-[![영상 9](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_3-1.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#57f1a47b68ba4d6c91bf1418057e2370)
+[![영상 9](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_3-1.png)](https://logistex.github.io/mid26-video/video_3-1.mp4)
 
-[영상 9] 3.1절 슬라이드의 설명 영상(136초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 9] 3.1절 슬라이드의 설명 영상(136초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 1단계는 DB 테이블, 학번과 비밀번호 로그인, 관리자의 명단 올리기를 만들었고, 클로드가 로컬 앱의 화면으로 확인했다고 보고했음
   - 비밀번호는 `bcrypt`로 해시해 저장함. 학생의 비밀번호는 모두 `1234`이고, 관리자 계정은 앱이 시작할 때 `ADMIN_PASSWORD`로 만들거나 갱신함(공고 2.1절)
@@ -539,9 +539,9 @@ A5\. 대화 기록
 
 [슬라이드 3.2] 2단계: 지원, 투표, 마감과 규칙 검사
 
-[![영상 10](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_3-2.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#4169943f80794680b3fe818a9cc3b51e)
+[![영상 10](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_3-2.png)](https://logistex.github.io/mid26-video/video_3-2.mp4)
 
-[영상 10] 3.2절 슬라이드의 설명 영상(170초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 10] 3.2절 슬라이드의 설명 영상(170초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 2단계는 지원, 투표, 모집 마감과 팀 규칙, 3초마다 바뀐 부분만 다시 그리는 화면(`st.fragment`[7])을 구현했음. 브라우저로 연습 시나리오의 학생 동작 50개를 눌러 보니, 화면에 나온 결과 안내가 모두 공고의 기대 결과와 같았음(10/30에 27개, 그때 빠뜨린 어려움 23개는 11/2에 보충)
   - 규칙 검사는 지원할 때와 승인 직전에 함. 승인 직전 재검사는 투표가 끝난 순서대로 처리함(공고 2.4절, 3장 표)
@@ -564,9 +564,9 @@ A5\. 대화 기록
 
 [슬라이드 3.3] 3단계: AI 배정과 실패 처리
 
-[![영상 11](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_3-3.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#0ea39d11ce094477819266631e5d71c1)
+[![영상 11](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_3-3.png)](https://logistex.github.io/mid26-video/video_3-3.mp4)
 
-[영상 11] 3.3절 슬라이드의 설명 영상(149초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 11] 3.3절 슬라이드의 설명 영상(149초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 3단계는 AI 배정, 배정안 검사 5가지, 실패 처리, 확정을 만들었음. 실패 처리는 가짜 서버로 재현해 동작을 확인했으나, 실제 무료 모델은 처음 7번 가운데 1번만 성공했고 원인을 기록으로 찾아 고쳤음
   - AI 호출의 결과는 성공과 실패 6가지임(`mp/ai.py` 14~20행). 빈 응답은 답 글이 비어 있음, 형식 오류는 답을 JSON으로 읽을 수 없음, 검사 실패는 JSON은 읽었으나 배정안 검사 5가지 가운데 하나를 어김, 시간 초과는 120초 안에 답이 오지 않음, HTTP 오류는 오픈라우터가 오류 코드(예: 429)를 돌려줌, 연결 오류는 오픈라우터에 닿지 못함. [표 12]에는 이 가운데 5가지가 나옴
@@ -650,9 +650,9 @@ A5\. 대화 기록
 
 [슬라이드 4.1] 비공개 저장소와 Streamlit 배포
 
-[![영상 12](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_4-1.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#829260ed95eb40cf92e0e54d4555c67d)
+[![영상 12](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_4-1.png)](https://logistex.github.io/mid26-video/video_4-1.mp4)
 
-[영상 12] 4.1절 슬라이드의 설명 영상(138초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 12] 4.1절 슬라이드의 설명 영상(138초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 비공개 저장소 `logistex/prj_mid_26`의 `main` 브랜치를 Streamlit Community Cloud에 배포했고(10/31 09:31), 로그인하지 않은 브라우저에서 로그인 화면이 열리는 것을 확인했음(10/31 15:09)
   - 배포 양식에는 저장소, 브랜치 `main`, 파일 `streamlit_app.py`, 주소 `prj-mid-26`을 넣었음([그림 9]). 공고 6.3절 감점 항목 5번(기본 브랜치가 아닌 코드로 배포)에 해당하지 않음
@@ -679,9 +679,9 @@ A5\. 대화 기록
 
 [슬라이드 4.2] 시험과 노트의 사례로 찾은 문제 3가지를 한 번에 고침
 
-[![영상 13](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_4-2.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#c13cf2c6e8b043acad6f7725c9934956)
+[![영상 13](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_4-2.png)](https://logistex.github.io/mid26-video/video_4-2.mp4)
 
-[영상 13] 4.2절 슬라이드의 설명 영상(253초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 13] 4.2절 슬라이드의 설명 영상(253초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 2차와 3차 모델의 빈 응답, DB를 옮긴 뒤 느려진 화면, 오래 쓰지 않은 DB 연결이 끊긴 채 쓰이는 문제의 3가지를 모아 한 번에 고쳤음(6장 노트 6.4.9항의 일괄 개선)
   - [표 13]은 문제, 알아챈 방법, 고친 내용과 결과임
@@ -708,9 +708,9 @@ A5\. 대화 기록
 
 [슬라이드 4.3] 보안 점검
 
-[![영상 14](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_4-3.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#ce6936b62be74eb091669840dce09b62)
+[![영상 14](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_4-3.png)](https://logistex.github.io/mid26-video/video_4-3.mp4)
 
-[영상 14] 4.3절 슬라이드의 설명 영상(323초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 14] 4.3절 슬라이드의 설명 영상(323초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 6장 노트 6.4.13항(보안 점검)의 15개 항목 프롬프트로 배포 전 진단을 받았고, 위험도 High 1건은 처음에 미뤘다가 배포 뒤에 고쳤음(10/31 15:28)
   - 노트의 안내대로 진단까지만 하고, 그 단계에서 코드는 고치지 않았음. 진단 결과는 저장소의 `docs/보안 점검.md`에 있음
@@ -759,9 +759,9 @@ A5\. 대화 기록
 
 [슬라이드 4.4] DB 일시정지 막기와 무료 모델의 하루 호출 수 관리
 
-[![영상 15](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_4-4.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#0ccc133d095c41ba9adf4aceaada4897)
+[![영상 15](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_4-4.png)](https://logistex.github.io/mid26-video/video_4-4.mp4)
 
-[영상 15] 4.4절 슬라이드의 설명 영상(193초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 15] 4.4절 슬라이드의 설명 영상(193초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - DB 일시정지는 깃허브 Actions 예약 실행으로 매일 한 번 DB에 질의를 보내 막음(공고 3장 표의 어려운 해결)
   - DB 일시정지: Supabase 무료 프로젝트는 1주일 동안 요청이 적으면 일시정지되고, 그러면 앱이 DB에 접속하지 못함(공고 4.4절)
@@ -789,9 +789,9 @@ A5\. 대화 기록
 
 [슬라이드 5.1] 시나리오와 확인 방법
 
-[![영상 16](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-1.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#3169c5816dd4439d9f35f125b1a89345)
+[![영상 16](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-1.png)](https://logistex.github.io/mid26-video/video_5-1.mp4)
 
-[영상 16] 5.1절 슬라이드의 설명 영상(319초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 16] 5.1절 슬라이드의 설명 영상(319초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 연습 시나리오 3개를 5가지 방법으로 실행했고, 5가지 모두 클로드의 보고가 아니라 작성자(기록 세션 포함, 1.3절)가 실행한 결과임([표 15])
   - 시나리오마다 명단 CSV와 팀 수가 정해져 있음: 쉬움은 학생 8명과 팀 3개, 중간은 학생 12명과 팀 4개, 어려움은 학생 16명과 팀 4개임(공고 부록)
@@ -904,9 +904,9 @@ A5\. 대화 기록
 
 [슬라이드 5.2.1] 쉬움 시나리오
 
-[![영상 17](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-2-1.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#394aa6ac96e84578a92f9ce731d5017f)
+[![영상 17](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-2-1.png)](https://logistex.github.io/mid26-video/video_5-2-1.mp4)
 
-[영상 17] 5.2.1항 슬라이드의 설명 영상(133초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 17] 5.2.1항 슬라이드의 설명 영상(133초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 쉬움 시나리오(공고 부록 1, 학생 8명, 팀 3개)의 하위 단계 8개가 모두 기대 결과와 같았고, 확정한 팀은 규칙 확인 4가지를 모두 통과했음([표 17])
   - 이 시나리오는 지원, 투표, 마감, 배정과 확정의 기본 흐름을 시험함(공고 6.1절)
@@ -952,9 +952,9 @@ A5\. 대화 기록
 
 [슬라이드 5.2.2] 중간 시나리오
 
-[![영상 18](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-2-2.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#6403f22a68bb4f879c1f14b7aacde0e8)
+[![영상 18](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-2-2.png)](https://logistex.github.io/mid26-video/video_5-2-2.mp4)
 
-[영상 18] 5.2.2항 슬라이드의 설명 영상(166초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 18] 5.2.2항 슬라이드의 설명 영상(166초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 중간 시나리오(공고 부록 2, 학생 12명, 팀 4개)의 하위 단계 12개가 모두 기대 결과와 같았고, 확정한 팀은 규칙 확인 4가지를 모두 통과했음([표 18])
   - 이 시나리오는 주 역할 중복, 거부, 한 번에 한 팀, 마감 처리와 배정안 검사를 시험함(공고 6.1절)
@@ -1002,9 +1002,9 @@ A5\. 대화 기록
 
 [슬라이드 5.2.3] 어려움 시나리오
 
-[![영상 19](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-2-3.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#f4e2e33049a9422591e9ec59595a9590)
+[![영상 19](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-2-3.png)](https://logistex.github.io/mid26-video/video_5-2-3.mp4)
 
-[영상 19] 5.2.3항 슬라이드의 설명 영상(206초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 19] 5.2.3항 슬라이드의 설명 영상(206초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 어려움 시나리오(공고 부록 3, 학생 16명, 팀 4개)의 하위 단계 16개가 모두 기대 결과와 같았고, 확정한 팀은 규칙 확인 4가지를 모두 통과했음([표 19])
   - 이 시나리오는 승인 직전 재검사, 필수 포함 역할 자리, 보조 역할을 쓴 배정을 시험함(공고 6.1절). AI 실패 처리와 대기 안내는 3.3절에서 다룸
@@ -1073,9 +1073,9 @@ A5\. 대화 기록
 - 이 절의 영상은 AI 배정과 확정 단계만 보임. [영상 20], [영상 21]은 11/2 23:13~23:21의 시연 녹화(다섯째 방법, 토글을 끔)이고, [영상 22]는 11/4에 모델 3개가 모두 실패한 실행의 녹화임. 그 앞 단계는 5.2절의 11/4 녹화와 결과가 같으므로 싣지 않음
 #### 5.3.1 쉬움 시나리오(앱이 직접 배정)
 
-[![영상 20](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-3-1.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#03a05092de2d438fae483fedbb07ca6d)
+[![영상 20](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-3-1.png)](https://logistex.github.io/mid26-video/video_5-3-1.mp4)
 
-[영상 20] 5.3.1항의 시연 영상(117초, 시연 녹화와 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 20] 5.3.1항의 시연 영상(117초, 시연 녹화와 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 11/1(넷째 방법): 앱이 직접 배정했고, 확정한 팀은 팀1 학생1, 4, 7, 8 / 팀2 학생2, 5 / 팀3 학생3, 6임(4명, 2명, 2명). 규칙 확인 4가지를 모두 통과했음. 규칙을 지키는 첫 배정을 골라 남은 학생 2명이 모두 팀1에 들어감
 - 11/1~11/2(다섯째 방법): 인원 편차를 줄이게 고친 뒤(5.2절) 확정한 팀은 팀1 학생1, 4, 7 / 팀2 학생2, 5, 8 / 팀3 학생3, 6임(3명, 3명, 2명). 규칙 확인 4가지를 모두 통과했음([영상 20])
@@ -1083,9 +1083,9 @@ A5\. 대화 기록
 
 #### 5.3.2 중간 시나리오(앱이 직접 배정)
 
-[![영상 21](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-3-2.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#eef7f2a79ebf433ab9e927a4151d5659)
+[![영상 21](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-3-2.png)](https://logistex.github.io/mid26-video/video_5-3-2.mp4)
 
-[영상 21] 5.3.2항의 시연 영상(101초, 시연 녹화와 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 21] 5.3.2항의 시연 영상(101초, 시연 녹화와 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 11/1(넷째 방법): 앱이 직접 배정했고, 확정한 팀은 팀1 학생1, 5, 10, 11 / 팀2 학생6, 9, 2, 12 / 팀3 학생3, 7 / 팀4 학생4, 8임(4명, 4명, 2명, 2명. 11-2단계 화면으로 확인함. 작성자의 증빙 화면, 공개하지 않음). 규칙 확인 4가지를 모두 통과했음
 - 11/1~11/2(다섯째 방법): 인원 편차를 줄이게 고친 뒤(5.2절) 확정한 팀은 팀1 학생1, 5, 10 / 팀2 학생6, 9, 2 / 팀3 학생3, 7, 11 / 팀4 학생4, 8, 12임(3명씩). 규칙 확인 4가지를 모두 통과했음([영상 21])
@@ -1093,9 +1093,9 @@ A5\. 대화 기록
 
 #### 5.3.3 어려움 시나리오(앱이 직접 배정)
 
-[![영상 22](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-3-3.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#4ae640708bce4effa780c73c24631392)
+[![영상 22](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_5-3-3.png)](https://logistex.github.io/mid26-video/video_5-3-3.mp4)
 
-[영상 22] 5.3.3항의 시연 영상(119초, 시연 녹화와 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 22] 5.3.3항의 시연 영상(119초, 시연 녹화와 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 11/1~11/2(넷째, 다섯째 방법): 앱이 직접 배정했고, 확정한 팀은 11/1의 2번과 11/2 녹화에서 모두 팀1 학생1, 4, 7, 10 / 팀2 학생2, 8, 5, 13 / 팀3 학생11, 15, 3, 6 / 팀4 학생9, 12, 14, 16임(4명씩). 규칙 확인 4가지를 모두 통과했음([그림 15])
 - 팀4에는 주 역할이 기획자나 웹 프로그래머인 학생이 없음. 학생12(주 역할 테스터, 보조 기획자)가 기획자를, 학생9(주 역할 프론트엔드 디자이너, 보조 웹 프로그래머)가 웹 프로그래머를 맡아 필수 포함 역할을 채움(보조 역할을 쓴 배정, 공고 2.3절)
@@ -1113,9 +1113,9 @@ A5\. 대화 기록
 
 [슬라이드 6.1] 자체 채점표
 
-[![영상 23](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-1.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#57da175c7f874866998827ade2bfcdc5)
+[![영상 23](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-1.png)](https://logistex.github.io/mid26-video/video_6-1.mp4)
 
-[영상 23] 6.1절 슬라이드의 설명 영상(206초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 23] 6.1절 슬라이드의 설명 영상(206초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 공고의 채점 요소를 잘게 나눠, 요소마다 공고 근거, 보고서에서 확인할 곳, 확인 방법, 결과, 예상 점수를 [표 20]에 모았음. 예상 점수는 30점 만점에 30점임
   - 근거는 학생에게 공개한 공고의 3장 표(기능별 점수), 6.1절(점수 배분), 6.3절(감점)임
@@ -1155,9 +1155,9 @@ A5\. 대화 기록
 
 [슬라이드 6.2] 기능별 해결 방법과 점수의 대조
 
-[![영상 24](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-2.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#563975fc9eee4eb6a157b346914a0f7d)
+[![영상 24](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-2.png)](https://logistex.github.io/mid26-video/video_6-2.mp4)
 
-[영상 24] 6.2절 슬라이드의 설명 영상(206초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 24] 6.2절 슬라이드의 설명 영상(206초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 공고 3장 표의 기능 8개를 모두 어려운 해결로 만들었고, 기능마다 확인한 방법을 [표 21]에 모았음
   - "확인" 칸의 "시험"은 클로드가 만든 자동 시험이고, 작성자가 마지막 커밋에서 다시 돌린 336개에 들어 있음(7.1절)
@@ -1181,9 +1181,9 @@ A5\. 대화 기록
 
 [슬라이드 6.3] 감점 항목 21개의 대조
 
-[![영상 25](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-3.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#3d9826ff9b064907b020220f09aacb8d)
+[![영상 25](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-3.png)](https://logistex.github.io/mid26-video/video_6-3.mp4)
 
-[영상 25] 6.3절 슬라이드의 설명 영상(198초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 25] 6.3절 슬라이드의 설명 영상(198초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 공고 6.3절의 감점 21개를 하나씩 대조했고, 해당하는 것이 없었음([표 22]). 감점 항목 1번(마감 뒤 커밋)은 마감 뒤에 확인함
 
@@ -1219,9 +1219,9 @@ A5\. 대화 기록
 
 [슬라이드 6.4] README.md 사례 8건과 다시 쓴 까닭
 
-[![영상 26](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-4.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#23e5cebcabc1466994dbc23a5ac3d92a)
+[![영상 26](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-4.png)](https://logistex.github.io/mid26-video/video_6-4.mp4)
 
-[영상 26] 6.4절 슬라이드의 설명 영상(271초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 26] 6.4절 슬라이드의 설명 영상(271초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - README 5~7장의 사례는 처음 쓴 판이 근거는 모두 맞았지만 읽는 사람에게 뜻이 전달되지 않아, 신 교수가 짚은 뒤 사례마다 "요지 → 배경 → 문제 → 한 일 → 결과 → 남은 것" 순서로 다시 썼음([표 23])
   - 예: README 6장 사례 B의 제목이 처음 판은 "사례 B: PRD에서 `max_tokens`를 4000으로 정함"이었고, 다시 쓴 판은 "6장 사례 B: '넉넉하게' 정한 응답 한도 4000이 모자라 빈 응답이 옴"임(`git show 0568ecb:README.md`와 지금의 `README.md` 140행)
@@ -1266,9 +1266,9 @@ A5\. 대화 기록
 
 [슬라이드 6.5] 제출물의 확인
 
-[![영상 27](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-5.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#ec3b1d7b4a1d4ba48984914d254768e2)
+[![영상 27](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_6-5.png)](https://logistex.github.io/mid26-video/video_6-5.mp4)
 
-[영상 27] 6.5절 슬라이드의 설명 영상(192초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 27] 6.5절 슬라이드의 설명 영상(192초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 공고 7장 표의 제출물 5가지(공고 1장의 4가지에 보고서 `README.md`를 더한 것) 가운데 배포 주소, 관리자 비밀번호, 압축 파일은 마감 전에 확인을 마쳤고, 저장소는 마감 뒤 11/3 00:01에 공개했음([표 25])
   - 압축 파일은 마지막 커밋 `b7c7f6d`에서 만들어 저장소와 같음. 공개는 공고가 마감 뒤로 정했음
@@ -1294,9 +1294,9 @@ A5\. 대화 기록
 
 [슬라이드 7] 결론의 개요
 
-[![영상 28](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#db94f53ca86f4ece94000971619aa77c)
+[![영상 28](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7.png)](https://logistex.github.io/mid26-video/video_7.mp4)
 
-[영상 28] 7장 슬라이드의 설명 영상(77초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 28] 7장 슬라이드의 설명 영상(77초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 7장은 결과를 요약하고, 클로드가 노트, 공고, 기록과 다르게 한 점, 남은 문제와 공고 보완 제안, 앱을 더 발전시키는 방향, 배운 점을 적음
 
@@ -1306,9 +1306,9 @@ A5\. 대화 기록
 
 [슬라이드 7.1] 결과의 요약
 
-[![영상 29](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-1.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#4918ca4970334cfcb92e51522dd6a1ef)
+[![영상 29](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-1.png)](https://logistex.github.io/mid26-video/video_7-1.mp4)
 
-[영상 29] 7.1절 슬라이드의 설명 영상(194초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 29] 7.1절 슬라이드의 설명 영상(194초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 공고가 요구한 앱을 만들어 배포했고, 연습 시나리오 3개의 모든 단계가 기대 결과와 같았으며, 확정한 팀은 모두 규칙을 지켰음
   - 기능 8개를 모두 어려운 해결로 만들었음(6.2절 [표 21])
@@ -1330,9 +1330,9 @@ A5\. 대화 기록
 
 [슬라이드 7.2] 클로드가 노트, 공고, 기록과 다르게 한 점의 해석
 
-[![영상 30](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-2.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#7307d6182a54432c8a0b97577c0622d4)
+[![영상 30](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-2.png)](https://logistex.github.io/mid26-video/video_7-2.mp4)
 
-[영상 30] 7.2절 슬라이드의 설명 영상(278초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 30] 7.2절 슬라이드의 설명 영상(278초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 6장 노트의 절차는 이 과제에 그대로 적용되었으나, 클로드가 노트의 절차, 공고의 문구, 기록과 다르게 한 것이 5건 있었음([표 26]). 앱 코드의 결함(확정 단추, 팀 수 칸 등)은 이 표에 세지 않고 5.2절과 6.4절에 적음
   - 1~3번은 클로드의 보고만 읽어서는 알 수 없었음. 작업 폴더, 공고 원문, 호출 기록을 직접 확인하고서야 드러났음
@@ -1367,9 +1367,9 @@ A5\. 대화 기록
 
 [슬라이드 7.3] 남은 문제와 공고, 노트의 보완 제안
 
-[![영상 31](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-3.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#69b04328cfa74c8396512e979dc331a8)
+[![영상 31](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-3.png)](https://logistex.github.io/mid26-video/video_7-3.mp4)
 
-[영상 31] 7.3절 슬라이드의 설명 영상(332초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 31] 7.3절 슬라이드의 설명 영상(332초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 앱에 남은 문제는 3가지임(11/4에 드러난 3차 모델의 HTTP 404는 이 절의 아래에 따로 적음. 이때도 앱이 직접 배정해 확정한 팀은 규칙을 지킴). 1번은 채점 결과에 영향이 없다고, 3번은 채점 기간에 시험을 돌리지 않으면 영향이 없다고 판단하여 조치하지 않았음. 2번은 원인을 찾지 못했으나, 자동 채점은 가상 학생마다 새 브라우저로 로그인하고 로그아웃을 쓰지 않으므로 영향이 적다고 판단하여 조치하지 않았음
   1. 1차 모델이 가끔 120초 동안 답하지 않아 끊김
@@ -1410,9 +1410,9 @@ A5\. 대화 기록
 
 [슬라이드 7.4] 앱을 더 발전시키는 방향
 
-[![영상 32](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-4.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#c281c738d66146719ef564d7bd6b70a3)
+[![영상 32](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-4.png)](https://logistex.github.io/mid26-video/video_7-4.mp4)
 
-[영상 32] 7.4절 슬라이드의 설명 영상(321초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 32] 7.4절 슬라이드의 설명 영상(321초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 가장 아쉬운 것은 무엇이 잘한 배정인지(최적화 목표)를 처음부터 정하고, AI에게 그 목표를 이루도록 요구하고, 앱이 그 목표를 이루었는지 확인하는 기능을 만들지 못한 것임. 규칙만 지키면 통과하므로, 학생이 한 팀에 몰린 배정도 확정될 수 있었음(5.2.1항)
 - 기회가 되면 더 하고 싶은 것은 AI 배정의 최적화 목표를 분명히 하는 것, 기능 3가지를 더하는 것, 웹 접근성의 한계 8개를 고치는 것임. 모두 과제의 범위 밖이고, 앱은 고치지 않았음
@@ -1462,9 +1462,9 @@ A5\. 대화 기록
 
 [슬라이드 7.5] 배운 점, 느낀 점, 다짐한 점
 
-[![영상 33](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-5.png)](https://delightful-run-7c5.notion.site/409022e2cfe780c78c6ee12e76022ece#35a51be832744694b6573683011ed345)
+[![영상 33](https://raw.githubusercontent.com/logistex/recipe4fridge/note-slides/mid26/report/%EA%B7%B8%EB%A6%BC/%EC%98%81%EC%83%81/%ED%8F%AC%EC%8A%A4%ED%84%B0_7-5.png)](https://logistex.github.io/mid26-video/video_7-5.mp4)
 
-[영상 33] 7.5절 슬라이드의 설명 영상(206초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 노션에서 영상이 재생됨
+[영상 33] 7.5절 슬라이드의 설명 영상(206초, 신 교수의 목소리로 합성한 설명과 자막). 그림을 누르면 브라우저에서 영상이 재생됨
 
 - 배운 점: 클로드의 "확인했다"를 다른 방법으로 다시 확인하는 일이 이 과제의 대부분이었고, 결함은 거의 모두 거기서 나왔음
   - `max_tokens` 4000은 클로드가 문서를 "확인했다"고 한 값이었으나, 이 앱의 입력으로 시험한 값은 아니었음(7.2절)
